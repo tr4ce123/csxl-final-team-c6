@@ -62,6 +62,9 @@ class UserEntity(EntityBase):
     # Section relations that the user is a part of.
     sections: Mapped[list["SectionMemberEntity"]] = relationship(back_populates="user")
 
+    # NOTE: This field establishes a many-to-many relationship between the member and users table. 
+    members: Mapped[list["MemberEntity"]] = relationship(back_populates="user", cascade="all,delete")
+    
     @classmethod
     def from_model(cls, model: User) -> Self:
         """
