@@ -41,6 +41,7 @@ import { AboutComponent } from './about/about.component';
 import { GateComponent } from './gate/gate.component';
 import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.component';
 import { SharedModule } from './shared/shared.module';
+import { OrganizationRosterComponent } from './organization/organization-roster/organization-roster.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { SharedModule } from './shared/shared.module';
     HomeComponent,
     AboutComponent,
     GateComponent,
-    ProfileEditorComponent
+    ProfileEditorComponent,
+    OrganizationRosterComponent
   ],
   imports: [
     /* Angular */

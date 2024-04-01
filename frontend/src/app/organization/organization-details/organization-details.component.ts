@@ -12,7 +12,8 @@ import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
   ResolveFn,
-  Route
+  Route,
+  Router
 } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { profileResolver } from '/workspace/frontend/src/app/profile/profile.resolver';
@@ -73,7 +74,8 @@ export class OrganizationDetailsComponent {
     private route: ActivatedRoute,
     protected snackBar: MatSnackBar,
     protected eventService: EventService,
-    private permission: PermissionService
+    private permission: PermissionService,
+    protected router: Router
   ) {
     /** Initialize data from resolvers. */
     const data = this.route.snapshot.data as {

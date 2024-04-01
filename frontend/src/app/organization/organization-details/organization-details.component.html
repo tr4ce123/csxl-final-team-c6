@@ -16,6 +16,14 @@
     [organization]="organization"
     [profile]="profile" />
 
+  <mat-card appearance="outlined">
+    <mat-card-actions>
+      <button mat-stroked-button (click)="router.navigate(['/organizations', organization.slug, 'roster'])">
+        View Roster
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
   <div class="event-listing-container">
     <event-list
       [eventsPerDay]="eventsPerDay"
@@ -26,3 +34,5 @@
       [showCreateButton]="(eventCreationPermission$ | async)!" />
   </div>
 </ng-template>
+
+
