@@ -16,24 +16,22 @@ class MemberEntity(EntityBase):
 
     # Organization properties (columns in the database table)
 
-    # These fields establish a foreign keys
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primarykey=True)
-    organization_id: Mapped[int] = mapped_column(ForeignKey("organization.id"), primarykey=True)
+    # These fields establish a foreign keys and relationship fields for a many-to-many relationship
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
+    user: Mapped["UserEntity"] = relationship(back_populates="members")
+
+    organization_id: Mapped[int] = mapped_column(ForeignKey("organization.id"), primary_key=True)
+    organization: Mapped["OrganizationEntity"] = relationship(back_populates="members")
 
     # Year of the student
     year: Mapped[int] = mapped_column(Integer, nullable=False)
 
     # Description of the student
-    description: Mapped[str] = mapped_column(String, nullablle=True, default="")
+    description: Mapped[str] = mapped_column(String, nullable=True, default="")
 
     #Is the member a leader in the organization
-    isLeader: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-
-    #Relationship fields
-    user: Mapped["UserEntity"] = relationship(back_populates="member")
-    organization: Mapped["OrganizationEntity"] = relationship(back_populates="member")
-
-
+    isLeader: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)    
+    
     def to_model(self) -> Member:
         """
         Converts a 'Member Entity' object into a 'Member' model object

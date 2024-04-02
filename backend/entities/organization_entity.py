@@ -55,7 +55,7 @@ class OrganizationEntity(EntityBase):
     )
 
     # NOTE: This field establishes a many-to-many relationship between the member and organization table. 
-    members: Mapped[list["MemberEntity"]] = relationship(back_populates="user", cascade="all,delete")
+    members: Mapped[list["MemberEntity"]] = relationship(back_populates="organization", cascade="all,delete")
 
     @classmethod
     def from_model(cls, model: Organization) -> Self:
