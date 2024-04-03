@@ -1,0 +1,75 @@
+<form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+  <mat-card appearance="outlined">
+
+    <mat-card-content>
+      <!-- Name -->
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          placeholder="Name"
+          formControlName="name"
+          name="name"
+          required />
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>Email</mat-label>
+        <textarea
+          matInput
+          placeholder="Email."
+          formControlName="email"
+          name="email"></textarea>
+      </mat-form-field>
+
+      <!-- Major -->
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>Major</mat-label>
+        <input
+          matInput
+          placeholder="Major"
+          formControlName="major"
+          name="major" />
+      </mat-form-field>
+
+      <!-- Year -->
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>Year</mat-label>
+        <input
+          type="number"
+          matInput
+          placeholder="Year"
+          formControlName="year"
+          name="year" />
+      </mat-form-field>
+
+      <!-- Pronouns -->
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>Pronouns</mat-label>
+        <input
+          matInput
+          placeholder="Pronouns"
+          formControlName="pronouns"
+          name="pronouns" />
+      </mat-form-field>
+
+      <!-- interest -->
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>Interest</mat-label>
+        <input
+          matInput
+          placeholder="Interest"
+          formControlName="interest"
+          name="interest" />
+      </mat-form-field>
+
+      <!-- Submit Button -->
+      <mat-card-actions>
+        <button mat-stroked-button type="submit" [disabled]="applicationForm.invalid">
+          Submit
+        </button>
+      </mat-card-actions>
+    </mat-card-content>
+  </mat-card>
+</form>
