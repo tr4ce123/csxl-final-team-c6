@@ -8,6 +8,7 @@
  */
 
 import { Event } from '../event/event.model';
+import { Profile } from '../models.module';
 
 /** Interface for Organization Type (used on frontend for organization detail) */
 export interface Organization {
@@ -26,4 +27,14 @@ export interface Organization {
   slug: string;
   shorthand: string;
   events: Event[] | null;
+}
+
+export interface Member {
+  user_id: number;
+  organization_id: number;
+  year: number;
+  description: string;
+  isLeader: boolean;
+  user: Profile;
+  organization: Organization;
 }

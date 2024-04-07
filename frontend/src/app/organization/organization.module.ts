@@ -32,6 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationPageComponent } from './organization-page/organization-page.component';
 import { OrganizationRoutingModule } from './organization-routing.module';
 import { OrganizationDetailsComponent } from './organization-details/organization-details.component';
+import { OrganizationRosterComponent } from './organization-roster/organization-roster.component';
 
 import { OrganizationFilterPipe } from './organization-filter/organization-filter.pipe';
 
@@ -42,12 +43,14 @@ import { SharedModule } from '../shared/shared.module';
 import { OrganizationDetailsInfoCard } from './widgets/organization-details-info-card/organization-details-info-card.widget';
 import { OrganizationEditorComponent } from '/workspace/frontend/src/app/organization/organization-editor/organization-editor.component';
 import { OrganizationNotFoundCard } from './widgets/organization-not-found-card/organization-not-found-card.widget';
+import { MemberWidget } from './widgets/member-widget/member-widget.widget';
 
 @NgModule({
   declarations: [
     OrganizationPageComponent,
     OrganizationDetailsComponent,
     OrganizationEditorComponent,
+    OrganizationRosterComponent,
 
     // Pipes
     OrganizationFilterPipe,
@@ -55,7 +58,8 @@ import { OrganizationNotFoundCard } from './widgets/organization-not-found-card/
     // UI Widgets
     OrganizationCard,
     OrganizationDetailsInfoCard,
-    OrganizationNotFoundCard
+    OrganizationNotFoundCard,
+    MemberWidget
   ],
   imports: [
     CommonModule,

@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.gzip import GZipMiddleware
+from backend.api import members
 
 from backend.services.coworking.reservation import ReservationException
 
@@ -18,6 +19,7 @@ from .api import (
     authentication,
     user,
     room,
+    members
 )
 from .api.coworking import status, reservation, ambassador, operating_hours
 from .api.academics import term, course, section
@@ -53,6 +55,7 @@ app = FastAPI(
         health.openapi_tags,
         admin_users.openapi_tags,
         admin_roles.openapi_tags,
+        members.openapi_tags
     ],
 )
 
@@ -77,6 +80,7 @@ feature_apis = [
     course,
     section,
     room,
+    members
 ]
 
 for feature_api in feature_apis:

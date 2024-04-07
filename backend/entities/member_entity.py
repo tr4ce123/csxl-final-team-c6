@@ -6,6 +6,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 
 from backend.models.member import Member
+from backend.models.member_details import MemberDetails
+from backend.models.organization import Organization
+from backend.models.user import User
 from .entity_base import EntityBase
 
 class MemberEntity(EntityBase):
@@ -40,14 +43,26 @@ class MemberEntity(EntityBase):
             Member: 'Member' object from the entity
         """
 
+
+
         return Member(
             user_id=self.user_id,
             organization_id=self.organization_id,
             year=self.year,
             description=self.description,
+            isLeader=self.isLeader
+        )
+
+    def to_details_model(self) -> MemberDetails:
+
+        return MemberDetails(
+            user_id=self.user_id,
+            organization_id=self.organization_id,
+            year=self.year,
+            description=self.description,
             isLeader=self.isLeader,
-            user=self.user,
-            organization=self.organization
+            user=self.user.to_model(),
+            organization=self.organization.to_model()
         )
 
     @classmethod
@@ -60,12 +75,11 @@ class MemberEntity(EntityBase):
         Returns:
             OrganizationEntity: Entity created from model
         """
+
         return cls(
             user_id=model.user_id,
             organization_id=model.organization_id,
             year=model.year,
             description=model.description,
-            isLeader=model.isLeader,
-            user=model.user,
-            organization=model.organization
+            isLeader=model.isLeader
         )

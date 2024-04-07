@@ -41,7 +41,6 @@ import { AboutComponent } from './about/about.component';
 import { GateComponent } from './gate/gate.component';
 import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.component';
 import { SharedModule } from './shared/shared.module';
-import { OrganizationRosterComponent } from './organization/organization-roster/organization-roster.component';
 import { OrganizationApplicationComponent } from './organization/organization-application/organization-application.component';
 
 @NgModule({
@@ -54,7 +53,6 @@ import { OrganizationApplicationComponent } from './organization/organization-ap
     AboutComponent,
     GateComponent,
     ProfileEditorComponent,
-    OrganizationRosterComponent,
     OrganizationApplicationComponent
   ],
   imports: [

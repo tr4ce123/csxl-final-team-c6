@@ -10,10 +10,8 @@ class Member(BaseModel):
         of the `Member` database in the PostgreSQL database
     """
 
-    user_id: int
-    organization_id: int
+    user_id: int | None = None
+    organization_id: int | None = None
     year: int
     description: str
     isLeader: bool
-    user: User
-    organization: Organization

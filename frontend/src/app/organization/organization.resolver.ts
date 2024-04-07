@@ -9,11 +9,12 @@
 
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { Organization } from './organization.model';
+import { Member, Organization } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { EventService } from '../event/event.service';
 import { Event } from '../event/event.model';
 import { catchError, map, of } from 'rxjs';
+import { MemberService } from './member.service';
 
 /** This resolver injects the list of organizations into the organization component. */
 export const organizationResolver: ResolveFn<Organization[] | undefined> = (
@@ -69,4 +70,12 @@ export const organizationEventsResolver: ResolveFn<Event[] | undefined> = (
   return inject(EventService).getEventsByOrganization(
     route.paramMap.get('slug')!
   );
+};
+
+/** This resolver injects the list of members into the organization roster component */
+export const organizationMembersResolver: ResolveFn<Member[] | undefined> = (
+  route,
+  state
+) => {
+  return inject(MemberService).getMembers(route.paramMap.get('slug')!);
 };
