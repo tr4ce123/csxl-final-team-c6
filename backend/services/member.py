@@ -12,7 +12,7 @@ from backend.models.user import User
 from backend.services.exceptions import ResourceNotFoundException
 from ..database import db_session
 from ..entities.member_entity import MemberEntity
-from ..models.member import Member
+from ..models.member import Member, MemberYear
 from ..models.organization_details import OrganizationDetails
 
 class MemberService:
@@ -120,9 +120,12 @@ class MemberService:
         member_entity = MemberEntity(
             user_id = subject.id,
             organization_id = organization.id,
-            year = 0,
-            description = "Default",
-            isLeader = False
+            year = MemberYear.FRESHMAN,
+            description = "New Member",
+            isLeader = False,
+            position = None,
+            major = "Computer Science",
+            minor = None
         )
 
         self._session.add(member_entity)
