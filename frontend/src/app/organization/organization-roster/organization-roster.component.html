@@ -25,8 +25,8 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef>Role</th>
-        <td mat-cell *matCellDef="let element">{{ element.isLeader ? 'Leader' : 'Member' }}</td>
+        <th mat-header-cell *matHeaderCellDef>Position</th>
+        <td mat-cell *matCellDef="let element">{{ element.position }}</td>
       </ng-container>
       <ng-container matColumnDef="expand">
         <th mat-header-cell *matHeaderCellDef aria-label="row actions">
@@ -63,7 +63,16 @@
               element === expandedElement ? 'expanded' : 'collapsed'
             ">
             <div>
-              <p><strong>Year:</strong> {{ element.year }}</p>
+              <p><strong>Year:</strong> {{ 
+                element.year == memberYear.FRESHMAN ? 'Freshman' : 
+                element.year == memberYear.SOPHOMORE ? 'Sophomore' : 
+                element.year == memberYear.JUNIOR ? 'Junior' : 
+                element.year == memberYear.SENIOR ? 'Senior' : 
+                element.year == memberYear.FIFTH_YEAR ? 'Fifth Year Senior' : 
+                element.year == memberYear.GRAD ? 'Graduate' : ''
+              }}</p>
+              <p><strong>Major:</strong> {{ element.major }}</p>
+              <p *ngIf="element.minor != null"><strong>Minor:</strong> {{ element.minor }}</p>
               <p><strong>Description:</strong> {{ element.description }}</p>
             </div>
           </div>

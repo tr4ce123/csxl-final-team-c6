@@ -5,12 +5,11 @@ The Member Service allows the API to manipulate member data in the database.
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from backend.entities.organization_entity import OrganizationEntity
-from backend.entities.user_entity import UserEntity
 from backend.models.member_details import MemberDetails
 from backend.models.organization import Organization
-from backend.models.public_user import PublicUser
 
 from backend.models.user import User
+from backend.services.exceptions import ResourceNotFoundException
 from ..database import db_session
 from ..entities.member_entity import MemberEntity
 from ..models.member import Member
@@ -29,7 +28,6 @@ class MemberService:
     def get_members_of_organization(
         self, organization: OrganizationDetails
     ) -> list[MemberDetails]:
-
         """
         Retrieves all of the members of an organization 
 
@@ -49,10 +47,34 @@ class MemberService:
 
         return [entity.to_details_model() for entity in member_entities]
 
+    def get_member_by_id(
+        self, id: int
+    ) -> MemberDetails:
+        """
+        Retrieves a member based on its id 
+
+        Parameters:
+            id: the id of the member
+
+        Returns:
+            MemberDetails
+        """
+
+        member_entity =(
+            self._session.query(MemberEntity)
+            .filter(MemberEntity.id == id)
+            .one_or_none()
+        )
+
+        # Check if result is null
+        if member_entity is None:
+            raise ResourceNotFoundException(f"No Member Entity found with matching ID: {id}")
+
+        return member_entity.to_details_model()
+
     def get_organizations_for_user(
         self, subject: User | None = None
     ) -> list[Organization]:
-
         """
         Retrieves all of the organizations a user is a part of  
 
@@ -71,28 +93,101 @@ class MemberService:
 
         return [entity.to_model() for entity in organization_entities]
 
-    def add_member_to_organization(
-        self, user_id: int, organization_id: int, year: int, description: str = "", isLeader: bool = False 
-    ) -> Member:
+    def add_member(
+        self, subject: User, organization: Organization
+    ) -> MemberDetails:
+        """
+        Creates a Member that acts as a relationship between a User and an Organization they want to join
 
+        Parameters:
+            subject: a valid User model representing the currently logged in user
+            organization: the organization the user is becoming a member of
+
+        Returns:
+            MemberDetails
+        """
+
+        # If the member entity already exists for the given user and organization, raise an error
         existing_member = (
             self._session.query(MemberEntity)
-            .filter_by(user_id=user_id, organization_id=organization_id)
-            .first()
+            .filter_by(user_id=subject.id, organization_id=organization.id)
+            .one_or_none()
         )
+
         if existing_member:
             raise HTTPException(status_code=400, detail="User is already a member of this organization.")
 
-        new_member = MemberEntity(
-            user_id=user_id,
-            organization_id=organization_id,
-            year=year,
-            description=description,
-            isLeader=isLeader
+        member_entity = MemberEntity(
+            user_id = subject.id,
+            organization_id = organization.id,
+            year = 0,
+            description = "Default",
+            isLeader = False
         )
 
-        self._session.add(new_member)
+        self._session.add(member_entity)
         self._session.commit()
 
-        return new_member.to_model()
+        return member_entity.to_details_model()
 
+    def remove_member(
+        self, subject: User, organization: Organization
+    ) -> None:
+        """
+        Removes a member from an organization
+
+        Parameters:
+            subject: a valid User model representing the currently logged in user
+            organization: the organization the user is becoming a member of
+
+        Returns:
+            None
+        """
+
+        member_entity = (
+            self._session.query(MemberEntity)
+            .filter_by(user_id=subject.id, organization_id=organization.id)
+            .one_or_none()
+        )
+
+        # If the member doesn't exist, raise exception
+        if member_entity is None:
+            raise ResourceNotFoundException
+
+        self._session.delete(member_entity)
+        self._session.commit()
+
+    def update_member(
+        self, member: Member
+    ) -> Member:
+        """
+        Update the member's information
+
+        Parameters:
+            member: a valid Member
+
+        Returns:
+            Member
+        """
+        
+        member_entity = (
+            self._session.query(MemberEntity)
+            .filter(MemberEntity.id == member.id)
+            .one_or_none()
+        )
+
+        # If the member doesn't exist, raise exception
+        if member_entity is None:
+            raise ResourceNotFoundException
+
+        member_entity.year = member.year
+        member_entity.description = member.description
+        member_entity.isLeader = member.isLeader
+        member_entity.position = member.position
+        member_entity.major = member.major
+        member_entity.minor = member.minor
+
+
+        self._session.commit()
+
+        return member_entity.to_model()

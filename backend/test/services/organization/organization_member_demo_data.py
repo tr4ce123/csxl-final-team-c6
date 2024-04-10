@@ -1,51 +1,64 @@
-from backend.models.member import Member
-from backend.models.member_details import MemberDetails
-from backend.models.user import User
 from ....entities.member_entity import MemberEntity
 import pytest
 from sqlalchemy.orm import Session
 from ..user_data import user, ambassador, leader
 from ..organization.organization_demo_data import cads, cssg
+from ....models.member import MemberYear
 from ..reset_table_id_seq import reset_table_id_seq
 
 sally_cads = MemberEntity(
     user_id = user.id,
     organization_id = cads.id,
-    year = 2026,
-    description = "My name is Sally and I am a Sophomore Computer Science Major.",
-    isLeader = False
+    year = MemberYear.FRESHMAN,
+    description = "My name is Sally and I am a Freshman Computer Science Major.",
+    isLeader = False,
+    position = None,
+    major = "Computer Science",
+    minor = None
 )
 
 sally_cssg = MemberEntity(
     user_id = user.id,
     organization_id = cssg.id,
-    year = 2026,
-    description = "My name is Amy and I am a Senior Computer Science Major.",
-    isLeader = False
+    year = MemberYear.FRESHMAN,
+    description = "My name is Amy and I am a Freshman Computer Science Major.",
+    isLeader = False,
+    position = None,
+    major = "Computer Science",
+    minor = None
 )
 
 amy_cads = MemberEntity(
     user_id = ambassador.id,
     organization_id = cads.id,
-    year = 2024,
-    description = "My name is Amy and I am a Senior Computer Science Major. I am the VP of CADS.",
-    isLeader = True
+    year = MemberYear.SOPHOMORE,
+    description = "My name is Amy and I am a Sophomore Computer Science Major. I am the VP of CADS.",
+    isLeader = True,
+    position = "Vice President",
+    major = "Computer Science",
+    minor = "Business Administration"
 )
 
 amy_cssg = MemberEntity(
     user_id = ambassador.id,
     organization_id = cssg.id,
-    year = 2024,
-    description = "My name is Amy and I am a Senior Computer Science Major. I am the Treasurer for CSSG.",
-    isLeader = True
+    year = MemberYear.SOPHOMORE,
+    description = "My name is Amy and I am a Sophomore Computer Science Major. I am the Treasurer for CSSG.",
+    isLeader = True,
+    position = "Treasurer",
+    major = "Computer Science",
+    minor = "Economics"
 )
 
 larry_cssg = MemberEntity(
     user_id = leader.id,
     organization_id = cssg.id,
-    year = 2025,
+    year = MemberYear.JUNIOR,
     description = "My name is Larry and I am a Junior Computer Science Major. I am the President of CSSG.",
-    isLeader = True
+    isLeader = True,
+    position = "President",
+    major = "Computer Science",
+    minor = "Astronomy"
 )
 
 

@@ -10,6 +10,15 @@
 import { Event } from '../event/event.model';
 import { Profile } from '../models.module';
 
+export enum MemberYear {
+  FRESHMAN = 1,
+  SOPHOMORE = 2,
+  JUNIOR = 3,
+  SENIOR = 4,
+  FIFTH_YEAR = 5,
+  GRAD = 6
+}
+
 /** Interface for Organization Type (used on frontend for organization detail) */
 export interface Organization {
   id: number | null;
@@ -32,9 +41,12 @@ export interface Organization {
 export interface Member {
   user_id: number;
   organization_id: number;
-  year: number;
+  year: MemberYear;
   description: string;
   isLeader: boolean;
+  position: string;
+  major: string;
+  minor: string;
   user: Profile;
   organization: Organization;
 }

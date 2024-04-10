@@ -8,12 +8,11 @@ import {
 } from '@angular/router';
 import { Profile } from 'src/app/models.module';
 import { profileResolver } from 'src/app/profile/profile.resolver';
-import { Member, Organization } from '../organization.model';
+import { Member, Organization, MemberYear } from '../organization.model';
 import {
   organizationDetailResolver,
   organizationMembersResolver
 } from '../organization.resolver';
-import { OrganizationService } from '../organization.service';
 import { MemberService } from '../member.service';
 import {
   animate,
@@ -69,6 +68,8 @@ export class OrganizationRosterComponent {
   public organization: Organization;
 
   public members: Member[];
+
+  public memberYear = MemberYear;
 
   /** Store the columns to display in the table */
   public displayedColumns: string[] = ['name', 'role'];
