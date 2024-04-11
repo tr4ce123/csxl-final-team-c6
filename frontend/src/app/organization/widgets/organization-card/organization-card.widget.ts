@@ -8,7 +8,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Organization } from '../../organization.model';
+import { Organization, OrganizationType } from '../../organization.model';
 import { Profile } from '/workspace/frontend/src/app/profile/profile.service';
 
 @Component({
@@ -23,6 +23,8 @@ export class OrganizationCard {
   @Input() profile?: Profile;
   /** @deprecated Stores the permission values for a profile */
   @Input() profilePermissions!: Map<number, number>;
+
+  organizationType = OrganizationType;
 
   /**
    * Determines whether or not the tooltip on the card is disabled

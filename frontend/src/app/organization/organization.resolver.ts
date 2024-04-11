@@ -9,7 +9,7 @@
 
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { Member, Organization } from './organization.model';
+import { Organization, OrganizationType, Member } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { EventService } from '../event/event.service';
 import { Event } from '../event/event.model';
@@ -46,7 +46,8 @@ export const organizationDetailResolver: ResolveFn<Organization | undefined> = (
       youtube: '',
       heel_life: '',
       public: false,
-      events: null
+      events: null,
+      org_type: OrganizationType.CLOSED
     };
   }
 

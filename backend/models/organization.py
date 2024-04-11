@@ -1,8 +1,19 @@
+from enum import Enum
 from pydantic import BaseModel
 
 __authors__ = ["Ajay Gandecha", "Jade Keegan", "Brianna Ta", "Audrey Toney"]
 __copyright__ = "Copyright 2023"
 __license__ = "MIT"
+
+
+class OrganizationType(Enum):
+    """
+    Determines the type of the organization.
+    """
+
+    OPEN = 0
+    APP = 1
+    CLOSED = 2
 
 
 class Organization(BaseModel):
@@ -27,3 +38,4 @@ class Organization(BaseModel):
     youtube: str
     heel_life: str
     public: bool
+    org_type: OrganizationType

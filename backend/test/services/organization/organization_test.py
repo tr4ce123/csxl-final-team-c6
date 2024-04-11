@@ -4,6 +4,7 @@
 import pytest
 from unittest.mock import create_autospec
 
+from backend.models.organization import OrganizationType
 from backend.services.exceptions import (
     UserPermissionException,
     ResourceNotFoundException,
@@ -111,6 +112,10 @@ def test_update_organization_as_root(
     assert (
         organization_svc_integration.get_by_slug("cads").website
         == "https://cads.cs.unc.edu/"
+    )
+    assert (
+        organization_svc_integration.get_by_slug("cads").org_type
+        == OrganizationType.APP
     )
 
 

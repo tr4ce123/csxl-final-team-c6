@@ -28,6 +28,33 @@ mat-card {
     align-items: center;
 }
 
+.right-container {
+    display: flex;
+    width: 50%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.status-indicator {
+    width: 10px; /* Example size for the circle */
+    height: 10px; /* Example size for the circle */
+    border-radius: 50%; /* Makes it a circle */
+    display: inline-block; /* Allows width and height to be set */
+    margin-left: auto; /* Aligns the circle to the right */
+}
+
+.green {
+    background-color: green;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.red {
+    background-color: red;
+}
+
 .logo {
     height: auto;
     max-width: 2.5rem;

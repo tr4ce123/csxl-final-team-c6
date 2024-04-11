@@ -153,6 +153,7 @@ class OrganizationService:
         obj.youtube = organization.youtube
         obj.heel_life = organization.heel_life
         obj.public = organization.public
+        obj.org_type = organization.org_type
 
         # Save changes
         self._session.commit()

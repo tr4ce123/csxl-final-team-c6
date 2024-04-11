@@ -2,7 +2,7 @@
 
 import pytest
 from sqlalchemy.orm import Session
-from ....models.organization import Organization
+from ....models.organization import Organization, OrganizationType
 from ....entities.organization_entity import OrganizationEntity
 
 from ..reset_table_id_seq import reset_table_id_seq
@@ -28,6 +28,7 @@ cads = Organization(
     youtube="https://www.youtube.com/channel/UCO44Yjhjuo5-TLUCAaP0-cQ",
     heel_life="https://heellife.unc.edu/organization/carolinadatascience",
     public=True,
+    org_type=OrganizationType.OPEN,
 )
 
 cssg = Organization(
@@ -45,6 +46,7 @@ cssg = Organization(
     youtube="",
     heel_life="https://heellife.unc.edu/organization/cssg",
     public=False,
+    org_type=OrganizationType.APP,
 )
 
 appteam = Organization(
@@ -62,6 +64,7 @@ appteam = Organization(
     youtube="",
     heel_life="https://heellife.unc.edu/organization/appteamcarolina",
     public=False,
+    org_type=OrganizationType.CLOSED,
 )
 
 organizations = [cads, cssg, appteam]
@@ -81,6 +84,7 @@ to_add = Organization(
     youtube="",
     heel_life="",
     public=True,
+    org_type=OrganizationType.OPEN,
 )
 
 to_add_conflicting_id = Organization(
@@ -98,6 +102,7 @@ to_add_conflicting_id = Organization(
     youtube="",
     heel_life="",
     public=True,
+    org_type=OrganizationType.OPEN,
 )
 
 new_cads = Organization(
@@ -115,6 +120,7 @@ new_cads = Organization(
     youtube="https://www.youtube.com/channel/UCO44Yjhjuo5-TLUCAaP0-cQ",
     heel_life="https://heellife.unc.edu/organization/carolinadatascience",
     public=True,
+    org_type=OrganizationType.APP,
 )
 
 # Data Functions

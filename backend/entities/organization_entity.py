@@ -4,8 +4,9 @@ from sqlalchemy import Integer, String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .entity_base import EntityBase
 from typing import Self
-from ..models.organization import Organization
+from ..models.organization import Organization, OrganizationType
 from ..models.organization_details import OrganizationDetails
+from sqlalchemy import Enum as SQLAlchemyEnum
 
 __authors__ = ["Ajay Gandecha", "Jade Keegan", "Brianna Ta", "Audrey Toney"]
 __copyright__ = "Copyright 2023"
@@ -48,6 +49,9 @@ class OrganizationEntity(EntityBase):
     heel_life: Mapped[str] = mapped_column(String)
     # Whether the organization can be joined by anyone or not
     public: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    # Whether the organization is open, application-based, or closed
+    # TODO: Refactor code to remove public field and incorporate this instead
+    org_type: Mapped[OrganizationType] = mapped_column(SQLAlchemyEnum(OrganizationType))
 
     # NOTE: This field establishes a one-to-many relationship between the organizations and events table.
     events: Mapped[list["EventEntity"]] = relationship(
@@ -82,6 +86,7 @@ class OrganizationEntity(EntityBase):
             youtube=model.youtube,
             heel_life=model.heel_life,
             public=model.public,
+            org_type=model.org_type,
         )
 
     def to_model(self) -> Organization:
@@ -106,6 +111,7 @@ class OrganizationEntity(EntityBase):
             youtube=self.youtube,
             heel_life=self.heel_life,
             public=self.public,
+            org_type=self.org_type,
         )
 
     def to_details_model(self) -> OrganizationDetails:
@@ -130,5 +136,6 @@ class OrganizationEntity(EntityBase):
             youtube=self.youtube,
             heel_life=self.heel_life,
             public=self.public,
+            org_type=self.org_type,
             events=[event.to_model() for event in self.events],
         )

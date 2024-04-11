@@ -19,6 +19,12 @@ export enum MemberYear {
   GRAD = 6
 }
 
+export enum OrganizationType {
+  OPEN = 0,
+  APP = 1,
+  CLOSED = 2
+}
+
 /** Interface for Organization Type (used on frontend for organization detail) */
 export interface Organization {
   id: number | null;
@@ -36,6 +42,7 @@ export interface Organization {
   slug: string;
   shorthand: string;
   events: Event[] | null;
+  org_type: OrganizationType;
 }
 
 export interface Member {

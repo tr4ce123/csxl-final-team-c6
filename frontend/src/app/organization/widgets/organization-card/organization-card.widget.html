@@ -20,6 +20,21 @@
         }}
       </mat-card-title>
     </div>
+    <!-- Organization Type Status -->
+    <div class="right-container">
+      <!--
+      {{ organization.org_type === organizationType.OPEN ? 'Open' :
+         organization.org_type === organizationType.APP ? 'Apply' :
+         organization.org_type === organizationType.CLOSED ? 'Closed' : '' }}
+      -->
+      
+      <span class="status-indicator"
+        [class.green]="organization.org_type === organizationType.OPEN"
+        [class.yellow]="organization.org_type === organizationType.APP"
+        [class.red]="organization.org_type === organizationType.CLOSED">
+      </span>
+      
+    </div>
   </mat-card-header>
 
   <!-- Organization Description -->
