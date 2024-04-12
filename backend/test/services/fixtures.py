@@ -3,6 +3,7 @@
 import pytest
 from unittest.mock import create_autospec
 from sqlalchemy.orm import Session
+
 from ...services import (
     PermissionService,
     UserService,
@@ -10,7 +11,9 @@ from ...services import (
     OrganizationService,
     EventService,
     RoomService,
+    MemberService
 )
+
 
 __authors__ = ["Kris Jordan", "Ajay Gandecha"]
 __copyright__ = "Copyright 2023"
@@ -61,3 +64,9 @@ def event_svc_integration(session: Session, user_svc_integration: UserService):
 def room_svc(session: Session):
     """RoomService fixture."""
     return RoomService(session, PermissionService(session))
+
+
+@pytest.fixture()
+def member_svc_integration(session: Session):
+    """MemberService fixture."""
+    return MemberService(session)
