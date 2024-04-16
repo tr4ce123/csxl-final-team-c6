@@ -1,7 +1,7 @@
 from ....entities.member_entity import MemberEntity
 import pytest
 from sqlalchemy.orm import Session
-from ..user_data import user, ambassador, leader, mark, morgan, tammy, vicky
+from ..user_data import user, ambassador, leader, mark, tammy, vicky
 from ..organization.organization_demo_data import cads, cssg
 from ....models.member import MemberYear
 from ..reset_table_id_seq import reset_table_id_seq
@@ -40,18 +40,6 @@ mark_cssg = MemberEntity(
     position=None,
     major="Computer Science",
     minor="Data Science",
-)
-
-morgan_cads = MemberEntity(
-    id=5,
-    user_id=morgan.id,
-    organization_id=cads.id,
-    year=MemberYear.SOPHOMORE,
-    description="My name is Morgan and I am a Sophomore Computer Science Major.",
-    isLeader=False,
-    position=None,
-    major="Computer Science",
-    minor="Biology",
 )
 
 tammy_cads = MemberEntity(
@@ -95,7 +83,6 @@ members = [
     larry_cads,
     mark_cads,
     mark_cssg,
-    morgan_cads,
     tammy_cads,
     vicky_cads,
     amy_cssg,
