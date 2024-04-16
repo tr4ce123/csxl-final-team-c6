@@ -118,7 +118,7 @@ cssg = Organization(
     youtube="",
     heel_life="https://heellife.unc.edu/organization/cssg",
     public=False,
-    org_type=OrganizationType.CLOSED,
+    org_type=OrganizationType.APP,
 )
 
 ctf = OrganizationEntity(

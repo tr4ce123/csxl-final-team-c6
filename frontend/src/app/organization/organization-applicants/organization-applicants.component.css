@@ -1,0 +1,40 @@
+.mat-mdc-card {
+    max-width: 100%;
+  }
+  
+  tr.example-detail-row {
+    height: 0;
+  }
+  
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+
+  button {
+  margin-left: 8px; 
+  padding: 8px 16px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease; 
+  }
+
+  button.accept {
+  color: rgba(0, 255, 0, 0.850); 
+  }
+  button.accept:hover {
+    background-color: #629c65; 
+  }
+
+  button.reject {
+  color: rgb(255, 0, 0); 
+  }
+
+  button.reject:hover {
+    background-color: #c46868; 
+  }
+

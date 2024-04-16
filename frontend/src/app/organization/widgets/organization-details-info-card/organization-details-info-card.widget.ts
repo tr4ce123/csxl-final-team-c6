@@ -11,10 +11,18 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Organization } from '../../organization.model';
+import {
+  ApplicantStatus,
+  Organization,
+  OrganizationType
+} from '../../organization.model';
 import { Profile } from 'src/app/profile/profile.service';
 import { PermissionService } from 'src/app/permission.service';
 import { Observable } from 'rxjs';
+import { MemberService } from '../../member.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApplicantService } from '../../applicant.service';
 
 @Component({
   selector: 'organization-details-info-card',
@@ -35,10 +43,26 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
   public isTablet: boolean = false;
   private isTabletSubscription!: Subscription;
 
+  /** Holds data on whether or not the user is a member of the organization */
+  public isMember: boolean = false;
+
+  public appIsPending: boolean = false;
+
+  public isLeader: boolean = false;
+
+  organizationType = OrganizationType;
+
+  applicantStatus = ApplicantStatus;
+
   /** Constructs the organization detail info card widget */
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private permission: PermissionService
+    private route: ActivatedRoute,
+    private permission: PermissionService,
+    private memberService: MemberService,
+    protected router: Router,
+    protected snackBar: MatSnackBar,
+    private applicantService: ApplicantService
   ) {}
 
   checkPermissions(): Observable<boolean> {
@@ -52,6 +76,8 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isHandsetSubscription = this.initHandset();
     this.isTabletSubscription = this.initTablet();
+    this.checkMembership();
+    this.checkApplicationStatus();
   }
 
   /** Unsubscribe from subscribers when the page is destroyed */
@@ -74,5 +100,72 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
       .observe(Breakpoints.TabletLandscape)
       .pipe(map((result) => result.matches))
       .subscribe((isTablet) => (this.isTablet = isTablet));
+  }
+
+  checkMembership() {
+    this.memberService
+      .getMembers(this.organization?.slug!)
+      .subscribe((members) => {
+        this.isMember = members.some(
+          (member) => member.user_id == this.profile?.id
+        );
+        this.isLeader = members.some(
+          (member) =>
+            member.user_id == this.profile?.id && member.isLeader == true
+        );
+      });
+  }
+
+  checkApplicationStatus() {
+    this.applicantService
+      .getApplicants(this.organization?.slug!)
+      .subscribe((applicants) => {
+        this.appIsPending = applicants.some(
+          (applicant) =>
+            applicant.user_id == this.profile?.id &&
+            applicant.status == this.applicantStatus.Pending
+        );
+      });
+  }
+
+  leaveOrganization() {
+    if (this.isMember) {
+      let confirmLeave = this.snackBar.open(
+        'Are you sure you want to leave this organization?',
+        'Leave',
+        { duration: 15000 }
+      );
+
+      confirmLeave.onAction().subscribe(() => {
+        this.memberService
+          .deleteMember(this.organization?.slug!, this.profile?.id!)
+          .subscribe(() => {
+            this.snackBar.open('You left ' + this.organization?.name, '', {
+              duration: 2000
+            });
+            this.isMember = false;
+            this.isLeader = false;
+          });
+      });
+    }
+  }
+
+  joinOrganization() {
+    if (this.organization?.org_type == this.organizationType.OPEN) {
+      this.memberService
+        .addMember(this.organization?.slug, this.profile?.id!)
+        .subscribe({
+          next: () => {
+            this.isMember = true;
+            this.snackBar.open('You joined ' + this.organization?.name, '', {
+              duration: 2000
+            });
+          }
+        });
+    }
+  }
+
+  viewPendingApplications() {
+    this.router.navigate(['applicants'], { relativeTo: this.route });
   }
 }

@@ -73,8 +73,25 @@
               <mat-icon>edit</mat-icon>
             </button>
           </a>
+          
+        </div>
+        <div class="card-actions" *ngIf="profile">
+          <button mat-stroked-button *ngIf="!isMember && organization?.org_type === organizationType.OPEN" (click)="joinOrganization()">
+            Join Organization
+          </button>
+          <button mat-stroked-button *ngIf="!isMember && organization?.org_type === organizationType.APP && !appIsPending" (click)="router.navigate(['/organizations', organization.slug, 'application'])">
+            Apply To Join
+          </button>
+          <button mat-stroked-button *ngIf="organization?.org_type == organizationType.APP && isLeader" mat-button (click)="viewPendingApplications()">
+            View Pending Applications
+          </button>
+          <button mat-stroked-button *ngIf="isMember" (click)="leaveOrganization()">
+            Leave Organization
+          </button>
+          <p *ngIf="appIsPending"> Your Application is Pending </p>
         </div>
       </div>
     </div>
   </mat-card-header>
+  
 </mat-card>

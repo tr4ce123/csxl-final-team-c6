@@ -134,13 +134,13 @@ def test_list_second_page(user_svc: UserService):
     """Test that subsequent pages of users are produced."""
     pagination_params = PaginationParams(page=1, page_size=2, order_by="id", filter="")
     users = user_svc.list(ambassador, pagination_params)
-    assert len(users.items) == len(user_data.users) - 2
+    assert len(users.items) == len(user_data.users) - 6
     assert users.items[0].id == user.id
 
 
 def test_list_beyond(user_svc: UserService):
     """Test that no users are produced when the end of the list is reached."""
-    pagination_params = PaginationParams(page=2, page_size=2, order_by="id", filter="")
+    pagination_params = PaginationParams(page=4, page_size=2, order_by="id", filter="")
     users = user_svc.list(ambassador, pagination_params)
     assert len(users.items) == 0
 

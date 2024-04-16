@@ -58,7 +58,7 @@ def get_member_by_id(
     return member_service.get_member_by_id(id)
 
 
-@api.post("/{slug}", response_model=MemberDetails, tags=["Members"])
+@api.post("/{slug}/create/{user_id}", response_model=MemberDetails, tags=["Members"])
 def add_member(
     slug: str,
     user_id: int,
@@ -86,14 +86,14 @@ def add_member(
     return member_service.add_member(user, organization)
 
 
-@api.delete("/{slug}", tags=["Members"])
+@api.delete("/{slug}/delete/{user_id}", response_model=None, tags=["Members"])
 def remove_member(
     slug: str,
     user_id: int,
     user_service: UserService = Depends(),
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
-) -> None:
+):
     """
     Remove a user from an organization
 

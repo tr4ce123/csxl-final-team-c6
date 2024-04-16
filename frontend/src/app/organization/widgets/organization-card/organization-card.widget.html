@@ -28,11 +28,15 @@
          organization.org_type === organizationType.CLOSED ? 'Closed' : '' }}
       -->
       
-      <span class="status-indicator"
-        [class.green]="organization.org_type === organizationType.OPEN"
-        [class.yellow]="organization.org_type === organizationType.APP"
-        [class.red]="organization.org_type === organizationType.CLOSED">
-      </span>
+
+      <p [matTooltip]="getTooltipMessage(organization.org_type)">
+        <span class="status-indicator"
+              [class.green]="organization.org_type === organizationType.OPEN"
+              [class.yellow]="organization.org_type === organizationType.APP"
+              [class.red]="organization.org_type === organizationType.CLOSED">
+        </span>
+      </p>
+     
       
     </div>
   </mat-card-header>

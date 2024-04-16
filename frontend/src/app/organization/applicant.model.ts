@@ -2,7 +2,7 @@ export interface FormSubmission {
   name: string;
   email: string;
   major: string;
-  year: number;
+  year: string;
   pronouns: string;
   interest: string;
 }

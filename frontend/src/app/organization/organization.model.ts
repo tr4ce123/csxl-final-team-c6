@@ -7,6 +7,7 @@
  * @license MIT
  */
 
+import { NonNullableFormBuilder } from '@angular/forms';
 import { Event } from '../event/event.model';
 import { Profile } from '../models.module';
 
@@ -56,4 +57,24 @@ export interface Member {
   minor: string;
   user: Profile;
   organization: Organization;
+}
+
+export enum ApplicantStatus {
+  Pending = 0,
+  Accepted = 1,
+  Rejected = -1
+}
+
+export interface Applicant {
+  id: number;
+  user_id: number;
+  organization_id: number;
+  status: ApplicantStatus;
+  name: string;
+  email: string;
+  major: string;
+  minor: string | null;
+  year: string;
+  pronouns: string;
+  interest: string;
 }

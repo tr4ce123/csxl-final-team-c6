@@ -16,10 +16,22 @@
     [organization]="organization"
     [profile]="profile" />
 
-  <mat-card appearance="outlined">
+  <mat-card appearance="outlined" *ngIf="profile">
+    <mat-card-content>
+      <mat-card-title> Our Leaders </mat-card-title>
+      <div class="leaders-grid">
+        <div class="leader-card" *ngFor="let leader of leaders">
+          <div class="position">{{ leader.position }}</div>
+          <div class="name">{{ leader.user.first_name }}</div>
+          <div class="name">{{ leader.user.last_name }}</div>
+        </div>
+      </div>
+
+    </mat-card-content>
     <mat-card-actions>
+      
       <button mat-stroked-button (click)="router.navigate(['/organizations', organization.slug, 'roster'])">
-        View Roster
+        View Full Roster
       </button>
     </mat-card-actions>
   </mat-card>

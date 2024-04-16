@@ -10,3 +10,29 @@
   padding-left: 16px;
   padding-right: 16px;
 }
+
+.leaders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.leader-card {
+  background-color: #3f3f3f; 
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  border: 0.01px solid #93929286;
+}
+
+.position {
+  font-size: 0.9em;
+  color: #757575; 
+  margin-bottom: 5px;
+}
+
+.name {
+  font-size: 1.0em;
+  color: #dad6d6; 
+}

@@ -26,6 +26,19 @@ export class OrganizationCard {
 
   organizationType = OrganizationType;
 
+  getTooltipMessage(orgType: OrganizationType): string {
+    switch (orgType) {
+      case OrganizationType.OPEN:
+        return 'Open';
+      case OrganizationType.APP:
+        return 'Application Only';
+      case OrganizationType.CLOSED:
+        return 'Closed';
+      default:
+        return '';
+    }
+  }
+
   /**
    * Determines whether or not the tooltip on the card is disabled
    * @param element: The HTML element

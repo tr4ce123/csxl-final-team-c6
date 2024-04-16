@@ -21,6 +21,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import { isAuthenticated } from 'src/app/gate/gate.guard';
 
 let titleResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
   return (
@@ -72,7 +73,7 @@ export class OrganizationRosterComponent {
   public memberYear = MemberYear;
 
   /** Store the columns to display in the table */
-  public displayedColumns: string[] = ['name', 'role'];
+  public displayedColumns: string[] = ['name', 'position'];
   /** Store the columns to display when extended */
   public columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
   /** Store the element where the dropdown is currently active */
@@ -80,7 +81,8 @@ export class OrganizationRosterComponent {
 
   constructor(
     private route: ActivatedRoute,
-    public memberService: MemberService
+    private router: Router,
+    private memberService: MemberService
   ) {
     const data = this.route.snapshot.data as {
       profile: Profile;
@@ -89,6 +91,24 @@ export class OrganizationRosterComponent {
     };
     this.profile = data.profile;
     this.organization = data.organization;
-    this.members = data.members;
+    this.members = this.sortMembersAlphabetically(data.members);
   }
+
+  private sortMembersAlphabetically(members: Member[]): Member[] {
+    return members.sort((a, b) =>
+      a.user.first_name!.localeCompare(b.user.first_name!)
+    );
+  }
+
+  // removeMember(user_id: number) {
+  //   this.memberService
+  //     .deleteMember(this.organization?.slug!, user_id)
+  //     .subscribe({
+  //       next: () => {
+  //         this.members = this.members.filter(
+  //           (member) => member.user.id !== user_id
+  //         );
+  //       }
+  //     });
+  // }
 }

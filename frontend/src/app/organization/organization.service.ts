@@ -55,9 +55,4 @@ export class OrganizationService {
   updateOrganization(organization: Organization): Observable<Organization> {
     return this.http.put<Organization>('/api/organizations', organization);
   }
-
-  // Application service function, need to change the /api
-  createForm(formSubmission: FormSubmission): Observable<FormSubmission> {
-    return this.http.post<FormSubmission>('/api/organization', formSubmission);
-  }
 }

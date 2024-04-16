@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Self
 
 from backend.entities.academics.section_member_entity import SectionMemberEntity
+from backend.entities.applicant_entity import ApplicantEntity
 from backend.entities.member_entity import MemberEntity
 from backend.models.academics.section_member import SectionMember
 from .entity_base import EntityBase
@@ -65,6 +66,8 @@ class UserEntity(EntityBase):
 
     # NOTE: This field establishes a many-to-many relationship between the member and users table. 
     members: Mapped[list["MemberEntity"]] = relationship(back_populates="user", cascade="all,delete")
+
+    applicants: Mapped[list["ApplicantEntity"]] = relationship(back_populates="user", cascade="all,delete")
     
     @classmethod
     def from_model(cls, model: User) -> Self:

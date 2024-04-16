@@ -53,16 +53,61 @@ user = User(
 
 leader = User(
     id=4,
-    pid=444444444,
-    onyen="larrylea",
+    pid=222222222,
+    onyen="larry",
     email="larry@unc.edu",
     first_name="Larry",
     last_name="Leader",
-    pronouns="He / They",
+    pronouns="He / Him",
     accepted_community_agreement=True,
 )
 
-users = [root, ambassador, user, leader]
+mark = User(
+    id=5,
+    pid=333333333,
+    onyen="mark",
+    email="mark@unc.edu",
+    first_name="Mark",
+    last_name="Member",
+    pronouns="He / Him",
+    accepted_community_agreement=True,
+)
+
+morgan = User(
+    id=6,
+    pid=444444444,
+    onyen="morgan",
+    email="morgan@unc.edu",
+    first_name="Morgan",
+    last_name="Member",
+    pronouns="She / Her",
+    accepted_community_agreement=True,
+)
+
+tammy = User(
+    id=7,
+    pid=555555555,
+    onyen="tammy",
+    email="tammy@unc.edu",
+    first_name="Tammy",
+    last_name="Treasurer",
+    pronouns="She / Her",
+    accepted_community_agreement=True,
+)
+
+vicky = User(
+    id=8,
+    pid=666666666,
+    onyen="vicky",
+    email="vicky@unc.edu",
+    first_name="Vicky",
+    last_name="VP",
+    pronouns="She / They",
+    accepted_community_agreement=True,
+)
+
+
+users = [root, ambassador, user, leader, mark, morgan, tammy, vicky]
 
 roles_users = {
     role_data.root_role.id: [root],
