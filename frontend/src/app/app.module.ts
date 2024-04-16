@@ -51,8 +51,7 @@ import { OrganizationApplicationComponent } from './organization/organization-ap
     ErrorDialogComponent,
     HomeComponent,
     AboutComponent,
-    GateComponent,
-    ProfileEditorComponent
+    GateComponent
   ],
   imports: [
     /* Angular */
