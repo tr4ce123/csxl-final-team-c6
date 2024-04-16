@@ -13,7 +13,6 @@ import { AuthenticationService } from '../authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { Organization } from './organization.model';
-import { FormSubmission } from './applicant.model';
 
 @Injectable({
   providedIn: 'root'
