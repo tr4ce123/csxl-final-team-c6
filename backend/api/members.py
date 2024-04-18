@@ -40,6 +40,30 @@ def get_organization_members(
     return member_service.get_members_of_organization(organization)
 
 
+@api.get("/{slug}/{term}", response_model=list[MemberDetails], tags=["Members"])
+def get_organization_members(
+    slug: str,
+    term: str,
+    organization_service: OrganizationService = Depends(),
+    member_service: MemberService = Depends(),
+) -> list[MemberDetails]:
+    """
+    Get the members of a specific organization by term.
+
+    Args:
+        slug: the slug of the organization
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
+        organization_service: the service to query organizations
+        member_service: the backing service
+
+    Returns:
+        list[MemberDetails]
+    """
+
+    organization = organization_service.get_by_slug(slug)
+    return member_service.get_members_of_organization_by_term(organization, term)
+
+
 @api.get("/id/{id}", response_model=MemberDetails, tags=["Members"])
 def get_member_by_id(
     id: int, member_service: MemberService = Depends()

@@ -15,6 +15,7 @@ sally_cads = Member(
     id=1,
     user_id=user.id,
     organization_id=cads.id,
+    term="Spring 2024",
     year=MemberYear.FRESHMAN,
     description="My name is Sally and I am a Freshman Computer Science Major.",
     isLeader=False,
@@ -27,6 +28,7 @@ amy_cads = Member(
     id=2,
     user_id=ambassador.id,
     organization_id=cads.id,
+    term="Spring 2023",
     year=MemberYear.SOPHOMORE,
     description="My name is Amy and I am a Sophomore Computer Science Major. I am the VP of CADS.",
     isLeader=True,
@@ -40,6 +42,7 @@ members = [sally_cads, amy_cads]
 to_add_cssg = Member(
     user_id=user.id,
     organization_id=cssg.id,
+    term="Fall 2023",
     year=MemberYear.FRESHMAN,
     description="My name is Amy and I am a Freshman Computer Science Major.",
     isLeader=False,
@@ -52,12 +55,26 @@ updated_sally_cads = Member(
     id=1,
     user_id=user.id,
     organization_id=cads.id,
+    term="Spring 2024",
     year=MemberYear.FRESHMAN,
     description="My name is Sally and I am a Freshman Computer Science Major.",
     isLeader=True,
     position=None,
     major="Computer Science",
     minor=None,
+)
+
+updated_amy_cads = Member(
+    id=2,
+    user_id=ambassador.id,
+    organization_id=cads.id,
+    term="Spring 2023",
+    year=MemberYear.SOPHOMORE,
+    description="My name is Amy and I am a Sophomore Computer Science Major. I am the VP of CADS.",
+    isLeader=True,
+    position="Vice President",
+    major="Computer Science",
+    minor="Stats",
 )
 
 

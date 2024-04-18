@@ -10,6 +10,7 @@ from backend.models.member_details import MemberDetails
 from backend.models.member import MemberYear
 from .entity_base import EntityBase
 
+
 class MemberEntity(EntityBase):
     """Serves as the database model schema defining the shape of the `Member` table"""
 
@@ -25,32 +26,37 @@ class MemberEntity(EntityBase):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
     user: Mapped["UserEntity"] = relationship(back_populates="members")
 
-    organization_id: Mapped[int] = mapped_column(ForeignKey("organization.id"), primary_key=True)
+    organization_id: Mapped[int] = mapped_column(
+        ForeignKey("organization.id"), primary_key=True
+    )
     organization: Mapped["OrganizationEntity"] = relationship(back_populates="members")
-        
+
+    # Academic Term
+    term: Mapped[str] = mapped_column(String, nullable=False, default="")
+
     # Year of the student
     year: Mapped[MemberYear] = mapped_column(SQLAlchemyEnum(MemberYear), nullable=False)
 
     # Description of the student
     description: Mapped[str] = mapped_column(String, nullable=True, default="")
 
-    #Is the member a leader in the organization
+    # Is the member a leader in the organization
     isLeader: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-    #String description of a members role ie President, Treasurer, etc.
+    # String description of a members role ie President, Treasurer, etc.
     position: Mapped[str] = mapped_column(String, nullable=True, default="Member")
 
-    #Member major
+    # Member major
     major: Mapped[str] = mapped_column(String, nullable=False)
 
-    #Member minor
+    # Member minor
     minor: Mapped[str] = mapped_column(String, nullable=True)
 
     def to_model(self) -> Member:
         """
         Converts a 'Member Entity' object into a 'Member' model object
 
-        Returns: 
+        Returns:
             Member: 'Member' object from the entity
         """
 
@@ -58,13 +64,13 @@ class MemberEntity(EntityBase):
             id=self.id,
             user_id=self.user_id,
             organization_id=self.organization_id,
+            term=self.term,
             year=self.year,
             description=self.description,
             isLeader=self.isLeader,
             position=self.position,
             major=self.major,
-            minor=self.minor
-
+            minor=self.minor,
         )
 
     def to_details_model(self) -> MemberDetails:
@@ -74,13 +80,14 @@ class MemberEntity(EntityBase):
             user_id=self.user_id,
             organization_id=self.organization_id,
             year=self.year,
+            term=self.term,
             description=self.description,
             isLeader=self.isLeader,
             position=self.position,
             major=self.major,
             minor=self.minor,
             user=self.user.to_model(),
-            organization=self.organization.to_model()
+            organization=self.organization.to_model(),
         )
 
     @classmethod
@@ -98,10 +105,11 @@ class MemberEntity(EntityBase):
             id=model.id,
             user_id=model.user_id,
             organization_id=model.organization_id,
+            term=model.term,
             year=model.year,
             description=model.description,
             isLeader=model.isLeader,
             position=model.position,
             major=model.major,
-            minor=model.minor
+            minor=model.minor,
         )

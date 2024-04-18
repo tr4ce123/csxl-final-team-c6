@@ -15,6 +15,27 @@ from ..entities.member_entity import MemberEntity
 from ..models.member import Member, MemberYear
 from ..models.organization_details import OrganizationDetails
 
+import datetime
+
+
+def get_current_term() -> str:
+    """Returns the current academic term in format "Term YYYY"."""
+    ### Not sure how inefficient this is
+    ### Realistically, it should be fine since members won't be added extremely consistently
+    ### But still a consideration
+
+    # Get current time
+    now = datetime.datetime.now()
+
+    # Check month. Map Jan-June -> Spring, July-Dec -> Fall
+    # Maymester/Summer should not be necessary because organizations only update rosters in Spring/Fall (to our knowledge)
+    if 1 <= now.month <= 6:
+        term = "Spring"
+    else:
+        term = "Fall"
+
+    return f"{term} {now.year}"
+
 
 class MemberService:
     """Service that performs all of the actions on the 'Members' table"""
@@ -42,6 +63,30 @@ class MemberService:
         member_entities = (
             self._session.query(MemberEntity)
             .where(MemberEntity.organization_id == organization.id)
+            .all()
+        )
+
+        return [entity.to_details_model() for entity in member_entities]
+
+    def get_members_of_organization_by_term(
+        self, organization: OrganizationDetails, term: str
+    ) -> list[MemberDetails]:
+        """
+        Retrieves all of the members of an organization for the given term
+
+        Parameters:
+            organization (OrganizationDetails): Organization to retrieve members of
+            term: string in format "Spring YYYY" or "Fall YYYY"
+
+        Returns:
+            list[MemberDetails]: List of all 'Member Details' that matches the organization's id
+        """
+
+        # Query the members with matching organization slug
+        member_entities = (
+            self._session.query(MemberEntity)
+            .where(MemberEntity.organization_id == organization.id)
+            .where(MemberEntity.term == term)
             .all()
         )
 
@@ -99,6 +144,7 @@ class MemberService:
         member_entity = MemberEntity(
             user_id=subject.id,
             organization_id=organization.id,
+            term=get_current_term(),
             year=MemberYear.FRESHMAN,
             description="New Member",
             isLeader=False,
@@ -157,6 +203,23 @@ class MemberService:
         # If the member doesn't exist, raise exception
         if member_entity is None:
             raise ResourceNotFoundException
+
+        if (
+            member_entity.user_id != member.user_id
+            or member_entity.organization_id != member.organization_id
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="Attempt to change member entity's user or organization.",
+            )
+
+        # Do not allow updates to memberships in past terms
+        # We think this is the right idea, but it's subject to change
+        if member_entity.term != get_current_term():
+            raise HTTPException(
+                status_code=400,
+                detail="Attempt to update member profile from previous term.",
+            )
 
         member_entity.year = member.year
         member_entity.description = member.description
