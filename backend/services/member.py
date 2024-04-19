@@ -156,7 +156,7 @@ class MemberService:
 
         return member_entity.to_details_model()
 
-    def add_member(self, subject: User, organization: Organization) -> MemberDetails:
+    def add_member(self, subject: User, organization: Organization, term: str) -> MemberDetails:
         """
         Creates a Member that acts as a relationship between a User and an Organization they want to join
 
@@ -171,7 +171,7 @@ class MemberService:
         # If the member entity already exists for the given user and organization, raise an error
         existing_member = (
             self._session.query(MemberEntity)
-            .filter_by(user_id=subject.id, organization_id=organization.id)
+            .filter_by(user_id=subject.id, organization_id=organization.id, term=term)
             .one_or_none()
         )
 
@@ -183,7 +183,7 @@ class MemberService:
         member_entity = MemberEntity(
             user_id=subject.id,
             organization_id=organization.id,
-            term=get_current_term(),
+            term=term,
             year=None,
             description=None,
             isLeader=False,
@@ -197,13 +197,15 @@ class MemberService:
 
         return member_entity.to_details_model()
 
-    def remove_member(self, subject: User, organization: Organization) -> None:
+    def remove_member(self, subject: User, organization: Organization, term: str) -> None:
         """
         Removes a member from an organization
 
         Parameters:
             subject: a valid User model representing the currently logged in user
             organization: the organization the user is becoming a member of
+            term: string in format "Spring YYYY" or "Fall YYYY"
+
 
         Returns:
             None
@@ -212,6 +214,7 @@ class MemberService:
         member_entity = (
             self._session.query(MemberEntity)
             .filter_by(user_id=subject.id, organization_id=organization.id)
+            .where(MemberEntity.term == term)
             .one_or_none()
         )
 

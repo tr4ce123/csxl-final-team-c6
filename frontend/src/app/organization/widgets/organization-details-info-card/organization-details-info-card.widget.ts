@@ -54,6 +54,13 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
 
   applicantStatus = ApplicantStatus;
 
+  // TODO: Find better way to do this
+  // Maybe have a function in Member Service to query it???
+  terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
+
+  // Default to current term
+  selectedTerm: string = MemberService.getCurrentTerm();
+
   /** Constructs the organization detail info card widget */
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -104,7 +111,7 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
 
   checkMembership() {
     this.memberService
-      .getMembers(this.organization?.slug!)
+      .getMembersByTerm(this.organization?.slug!, this.selectedTerm)
       .subscribe((members) => {
         this.isMember = members.some(
           (member) => member.user_id == this.profile?.id
@@ -138,7 +145,11 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
 
       confirmLeave.onAction().subscribe(() => {
         this.memberService
-          .deleteMember(this.organization?.slug!, this.profile?.id!)
+          .deleteMember(
+            this.organization?.slug!,
+            this.profile?.id!,
+            this.selectedTerm
+          )
           .subscribe(() => {
             this.snackBar.open('You left ' + this.organization?.name, '', {
               duration: 2000
@@ -155,7 +166,8 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
       this.memberService
         .joinOrganizationWithExistingDetails(
           this.organization.slug,
-          this.profile?.id!
+          this.profile?.id!,
+          this.selectedTerm
         )
         .subscribe({
           next: () => {

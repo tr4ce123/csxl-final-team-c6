@@ -70,6 +70,12 @@ export class OrganizationRosterComponent {
 
   public members: Member[];
 
+  // TODO: Find better way to do this
+  // Maybe have a function in Member Service to query it???
+  terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
+
+  // Default to current term
+  selectedTerm: string = MemberService.getCurrentTerm();
   /** Store the columns to display in the table */
   public displayedColumns: string[] = ['name', 'position'];
   /** Store the columns to display when extended */
@@ -90,6 +96,16 @@ export class OrganizationRosterComponent {
     this.profile = data.profile;
     this.organization = data.organization;
     this.members = this.sortMembersAlphabetically(data.members);
+  }
+
+  loadMembersForTerm() {
+    if (!this.organization || !this.selectedTerm) return;
+
+    this.memberService
+      .getMembersByTerm(this.organization.slug, this.selectedTerm)
+      .subscribe((members) => {
+        this.members = this.sortMembersAlphabetically(members);
+      });
   }
 
   private sortMembersAlphabetically(members: Member[]): Member[] {

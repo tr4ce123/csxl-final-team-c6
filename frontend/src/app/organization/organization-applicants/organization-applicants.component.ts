@@ -67,6 +67,13 @@ export class OrganizationApplicantsComponent implements OnInit {
   public organization: Organization;
   public applicants!: Applicant[];
 
+  // TODO: Find better way to do this
+  // Maybe have a function in Member Service to query it???
+  terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
+
+  // Default to current term
+  selectedTerm: string = MemberService.getCurrentTerm();
+
   public displayedColumns: string[] = ['name', 'major', 'year'];
   /** Store the columns to display when extended */
   public columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
@@ -113,7 +120,8 @@ export class OrganizationApplicantsComponent implements OnInit {
     this.memberService
       .joinOrganizationWithExistingDetails(
         this.organization.slug,
-        applicant.user_id
+        applicant.user_id,
+        this.selectedTerm
       )
       .subscribe({
         next: () => {

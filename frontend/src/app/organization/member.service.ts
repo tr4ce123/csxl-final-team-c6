@@ -22,11 +22,33 @@ export class MemberService {
     );
   }
 
+  static getCurrentTerm(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    let term: string;
+
+    if (month >= 0 && month <= 5) {
+      term = 'Spring';
+    } else {
+      term = 'Fall';
+    }
+
+    return `${term} ${year}`;
+  }
+
   /** Get all member entries from the backend database table using the backend HTTP get request.
    * @returns {Observable<Member[]>}
    */
   getMembers(slug: string): Observable<Member[]> {
     return this.http.get<Member[]>('/api/members/' + slug);
+  }
+
+  /** Get all member entries for a given term from the backend database table using HTTP get request
+   * @returns {Observable<Member[]>}
+   */
+  getMembersByTerm(slug: string, term: string): Observable<Member[]> {
+    return this.http.get<Member[]>('/api/members/' + slug + '/' + term);
   }
 
   /** Get all member entries from the backend database table using the backend HTTP get request.
@@ -40,16 +62,19 @@ export class MemberService {
    * @param slug: The organization to delete the member from
    * @returns void
    */
-  deleteMember(slug: string, user_id: number): Observable<any> {
-    return this.http.delete(`/api/members/${slug}/delete/${user_id}`);
+  deleteMember(slug: string, user_id: number, term: string): Observable<any> {
+    return this.http.delete(`/api/members/${slug}/delete/${user_id}/${term}`);
   }
-
+  
   /** Create a member object using the backend HTTP post request.
    * @param slug: The organization to add the member to
    * @returns void
    */
-  addMember(slug: string, user_id: number): Observable<Member> {
-    return this.http.post<Member>(`/api/members/${slug}/create/${user_id}`, {});
+  addMember(slug: string, user_id: number, term: string): Observable<Member> {
+    return this.http.post<Member>(
+      `/api/members/${slug}/create/${user_id}/${term}`,
+      {}
+    );
   }
 
   /** Update a member object using the backend HTTP post request.
@@ -68,13 +93,14 @@ export class MemberService {
    */
   joinOrganizationWithExistingDetails(
     slug: string,
-    userId: number
+    userId: number,
+    term: string
   ): Observable<Member> {
     return this.getUserMemberships(userId).pipe(
       switchMap((existingMembers) => {
         if (existingMembers.length > 0) {
           const tempMember = existingMembers[0];
-          return this.addMember(slug, userId).pipe(
+          return this.addMember(slug, userId, term).pipe(
             switchMap((newMember) => {
               newMember.major = tempMember.major;
               newMember.minor = tempMember.minor;
@@ -84,7 +110,7 @@ export class MemberService {
             })
           );
         } else {
-          return this.addMember(slug, userId);
+          return this.addMember(slug, userId, term);
         }
       })
     );

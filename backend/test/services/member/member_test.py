@@ -122,7 +122,7 @@ def test_add_member(
     """Test that a member is able to be created."""
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cssg")
-    created_member = member_svc_integration.add_member(user, organization)
+    created_member = member_svc_integration.add_member(user, organization, "Spring 2024")
     assert created_member is not None
     assert created_member.id is not None
     assert created_member.organization_id is not None
@@ -138,7 +138,7 @@ def test_add_member_already_exists(
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cads")
     with pytest.raises(HTTPException):
-        member_svc_integration.add_member(user, organization)
+        member_svc_integration.add_member(user, organization, "Spring 2024")
 
 
 # Test 'MemberService.remove_member()'
@@ -152,7 +152,7 @@ def test_remove_member(
     """Test that a member is able to be deleted."""
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cads")
-    member_svc_integration.remove_member(user, organization)
+    member_svc_integration.remove_member(user, organization, "Spring 2024")
     with pytest.raises(ResourceNotFoundException):
         member_svc_integration.get_member_by_id(1)
 
@@ -166,7 +166,7 @@ def test_remove_member_does_not_exist(
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cssg")
     with pytest.raises(ResourceNotFoundException):
-        member_svc_integration.remove_member(user, organization)
+        member_svc_integration.remove_member(user, organization, "Spring 2024")
 
 
 # Test 'MemberService.update_member()'

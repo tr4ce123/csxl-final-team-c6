@@ -129,10 +129,11 @@ def get_user_memberships_by_term(
     user = user_service.get_by_id(user_id)
     return member_service.get_user_memberships_by_term(user, term)
 
-@api.post("/{slug}/create/{user_id}", response_model=MemberDetails, tags=["Members"])
+@api.post("/{slug}/create/{user_id}/{term}", response_model=MemberDetails, tags=["Members"])
 def add_member(
     slug: str,
     user_id: int,
+    term: str,
     user_service: UserService = Depends(),
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
@@ -143,6 +144,7 @@ def add_member(
     Args:
         slug: the slug of the organization
         user_id: the id of the user
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
         user_service: a valid User Service
         organization_service: a valid Organization Service
         member_service: the backing service
@@ -154,13 +156,14 @@ def add_member(
     user = user_service.get_by_id(user_id)
     organization: Organization = organization_service.get_by_slug(slug)
 
-    return member_service.add_member(user, organization)
+    return member_service.add_member(user, organization, term)
 
 
-@api.delete("/{slug}/delete/{user_id}", response_model=None, tags=["Members"])
+@api.delete("/{slug}/delete/{user_id}/{term}", response_model=None, tags=["Members"])
 def remove_member(
     slug: str,
     user_id: int,
+    term: str,
     user_service: UserService = Depends(),
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
@@ -171,6 +174,7 @@ def remove_member(
     Args:
         slug: the slug of the organization
         user_id: the id of the user
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
         user_service: a valid User Service
         organization_service: a valid Organization Service
         member_service: the backing service
@@ -182,7 +186,7 @@ def remove_member(
     user = user_service.get_by_id(user_id)
     organization: Organization = organization_service.get_by_slug(slug)
 
-    return member_service.remove_member(user, organization)
+    return member_service.remove_member(user, organization, term)
 
 
 @api.put("", responses={404: {"model": None}}, response_model=Member, tags=["Members"])

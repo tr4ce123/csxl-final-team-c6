@@ -1,8 +1,8 @@
 from ....entities.member_entity import MemberEntity
 import pytest
 from sqlalchemy.orm import Session
-from ..user_data import user, ambassador, leader, mark, tammy, vicky
-from ..organization.organization_demo_data import cads, cssg
+from ..user_data import user, ambassador, leader, mark, tammy, vicky, morgan
+from ..organization.organization_demo_data import cads, cssg, acm
 from ..reset_table_id_seq import reset_table_id_seq
 
 larry_cads = MemberEntity(
@@ -96,6 +96,45 @@ amy_cssg_2023 = MemberEntity(
     minor=None,
 )
 
+morgan_acm = MemberEntity(
+    id=8,
+    user_id=morgan.id,
+    organization_id=acm.id,
+    term="Spring 2024",
+    year="Senior",
+    description="My name is Morgan and I am a Sophomore CS Major.",
+    isLeader=False,
+    position=None,
+    major="Biology",
+    minor="CS",
+)
+
+vicky_acm_F2023 = MemberEntity(
+    id=9,
+    user_id=vicky.id,
+    organization_id=acm.id,
+    term="Fall 2023",
+    year="Graduate",
+    description="My name is Vicky and I am a Graduate Student Studying Computer Science.",
+    isLeader=False,
+    position=None,
+    major="Computer Science",
+    minor=None,
+)
+
+mark_cads_F2023 = MemberEntity(
+    id=10,
+    user_id=mark.id,
+    organization_id=cads.id,
+    term="Fall 2023",
+    year="Junior",
+    description="My name is Mark and I am a Junior Computer Science Major.",
+    isLeader=True,
+    position="Vice President",
+    major="Computer Science",
+    minor="Data Science",
+)
+
 
 members = [
     larry_cads,
@@ -105,6 +144,9 @@ members = [
     vicky_cads,
     amy_cssg,
     amy_cssg_2023,
+    morgan_acm,
+    vicky_acm_F2023,
+    mark_cads_F2023,
 ]
 
 

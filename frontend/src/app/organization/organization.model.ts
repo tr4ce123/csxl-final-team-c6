@@ -40,6 +40,7 @@ export interface Organization {
 export interface Member {
   user_id: number;
   organization_id: number;
+  term: string;
   year: string;
   description: string;
   isLeader: boolean;
