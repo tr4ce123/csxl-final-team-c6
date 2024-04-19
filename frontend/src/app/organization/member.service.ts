@@ -51,11 +51,20 @@ export class MemberService {
     return this.http.get<Member[]>('/api/members/' + slug + '/' + term);
   }
 
-  /** Get all member entries from the backend database table using the backend HTTP get request.
+  /** Get all member entries associated with a user from the backend database table using the backend HTTP get request.
    * @returns {Observable<Member[]>}
    */
   getUserMemberships(userId: number): Observable<Member[]> {
     return this.http.get<Member[]>(`/api/members/user/memberships/${userId}`);
+  }
+
+  /** Get all member entries associated with a user by term from the backend database table using the backend HTTP get request.
+   * @returns {Observable<Member[]>}
+   */
+  getUserMembershipsByTerm(userId: number, term: string): Observable<Member[]> {
+    return this.http.get<Member[]>(
+      `/api/members/user/memberships/${userId}/${term}`
+    );
   }
 
   /** Delete the given member object using the backend HTTP delete request.
@@ -65,7 +74,7 @@ export class MemberService {
   deleteMember(slug: string, user_id: number, term: string): Observable<any> {
     return this.http.delete(`/api/members/${slug}/delete/${user_id}/${term}`);
   }
-  
+
   /** Create a member object using the backend HTTP post request.
    * @param slug: The organization to add the member to
    * @returns void
@@ -96,7 +105,7 @@ export class MemberService {
     userId: number,
     term: string
   ): Observable<Member> {
-    return this.getUserMemberships(userId).pipe(
+    return this.getUserMembershipsByTerm(userId, term).pipe(
       switchMap((existingMembers) => {
         if (existingMembers.length > 0) {
           const tempMember = existingMembers[0];

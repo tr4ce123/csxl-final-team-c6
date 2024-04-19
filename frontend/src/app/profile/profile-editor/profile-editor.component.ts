@@ -50,6 +50,13 @@ export class ProfileEditorComponent implements OnInit {
     bio: ''
   });
 
+  // TODO: Find better way to do this
+  // Maybe have a function in Member Service to query it???
+  terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
+
+  // Default to current term
+  selectedTerm: string = MemberService.getCurrentTerm();
+
   constructor(
     route: ActivatedRoute,
     protected formBuilder: FormBuilder,
@@ -91,10 +98,9 @@ export class ProfileEditorComponent implements OnInit {
 
   loadMemberships() {
     this.memberService
-      .getUserMemberships(this.profile.id!)
+      .getUserMembershipsByTerm(this.profile.id!, this.selectedTerm)
       .subscribe((memberships) => {
         this.memberships = memberships;
-
         this.memberForm.setValue({
           major: this.memberships[0].major,
           minor: this.memberships[0].minor,
