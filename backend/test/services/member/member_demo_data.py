@@ -3,7 +3,6 @@ import pytest
 from sqlalchemy.orm import Session
 from ..user_data import user, ambassador, leader, mark, tammy, vicky
 from ..organization.organization_demo_data import cads, cssg
-from ....models.member import MemberYear
 from ..reset_table_id_seq import reset_table_id_seq
 
 larry_cads = MemberEntity(
@@ -11,7 +10,7 @@ larry_cads = MemberEntity(
     user_id=leader.id,
     organization_id=cads.id,
     term="Spring 2024",
-    year=MemberYear.JUNIOR,
+    year="Junior",
     description="My name is Larry and I am a Junior Computer Science Major.",
     isLeader=True,
     position="President",
@@ -24,7 +23,7 @@ mark_cads = MemberEntity(
     user_id=mark.id,
     organization_id=cads.id,
     term="Spring 2024",
-    year=MemberYear.JUNIOR,
+    year="Junior",
     description="My name is Mark and I am a Junior Computer Science Major.",
     isLeader=False,
     position=None,
@@ -37,7 +36,7 @@ mark_cssg = MemberEntity(
     user_id=mark.id,
     organization_id=cssg.id,
     term="Spring 2024",
-    year=MemberYear.JUNIOR,
+    year="Junior",
     description="My name is Mark and I am a Junior Computer Science Major.",
     isLeader=False,
     position=None,
@@ -50,7 +49,7 @@ tammy_cads = MemberEntity(
     user_id=tammy.id,
     organization_id=cads.id,
     term="Spring 2024",
-    year=MemberYear.SENIOR,
+    year="Junior",
     description="My name is Tammy and I am a Senior Computer Science Major.",
     isLeader=False,
     position="Treasurer",
@@ -63,7 +62,7 @@ vicky_cads = MemberEntity(
     user_id=vicky.id,
     organization_id=cads.id,
     term="Spring 2024",
-    year=MemberYear.GRAD,
+    year="Graduate",
     description="My name is Vicky and I am a Graduate Student Studying Computer Science.",
     isLeader=True,
     position="Vice President",
@@ -76,7 +75,7 @@ amy_cssg = MemberEntity(
     user_id=ambassador.id,
     organization_id=cssg.id,
     term="Spring 2024",
-    year=MemberYear.SENIOR,
+    year="Senior",
     description="My name is Amy and I am a Senior Computer Science Major.",
     isLeader=True,
     position="President",
@@ -89,7 +88,7 @@ amy_cssg_2023 = MemberEntity(
     user_id=ambassador.id,
     organization_id=cssg.id,
     term="Fall 2023",
-    year=MemberYear.SENIOR,
+    year="Senior",
     description="My name is Amy and I am a Senior Computer Science Major.",
     isLeader=False,
     position=None,

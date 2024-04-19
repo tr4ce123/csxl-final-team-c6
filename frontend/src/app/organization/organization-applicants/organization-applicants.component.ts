@@ -95,7 +95,6 @@ export class OrganizationApplicantsComponent implements OnInit {
       .getApplicants(this.organization.slug)
       .subscribe((applicants) => {
         this.applicants = applicants;
-        console.log('Got applicants', this.applicants);
       });
   }
 
@@ -103,27 +102,25 @@ export class OrganizationApplicantsComponent implements OnInit {
     // Update status field
     applicant.status = ApplicantStatus.Accepted;
 
-    // Logic to accept the applicant
-    console.log('Accepted:', applicant);
-
     // Update the application to be accepted
     this.applicantService
       .updateApplicant(applicant.id, applicant)
-      .subscribe((result) => {
+      .subscribe(() => {
         this.loadApplicants();
       });
 
     // Add new member to the organization
     this.memberService
-      .addMember(this.organization.slug, applicant.user_id)
+      .joinOrganizationWithExistingDetails(
+        this.organization.slug,
+        applicant.user_id
+      )
       .subscribe({
         next: () => {
           this.snackBar.open(
             'You accepted ' + applicant.name + ' into your organization',
             '',
-            {
-              duration: 2000
-            }
+            { duration: 2000 }
           );
         }
       });

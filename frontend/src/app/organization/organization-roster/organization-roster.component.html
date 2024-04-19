@@ -35,6 +35,7 @@
           <div style="display: flex; flex-direction: row-reverse">
             <button
             mat-icon-button
+            *ngIf="element.year != null || element.major != null || element.minor != null || element.description != null"
             aria-label="expand row"
             (click)="
               expandedElement = expandedElement === element ? null : element;
@@ -62,17 +63,10 @@
               element === expandedElement ? 'expanded' : 'collapsed'
             ">
             <div>
-              <p><strong>Year:</strong> {{ 
-                element.year == memberYear.FRESHMAN ? 'Freshman' : 
-                element.year == memberYear.SOPHOMORE ? 'Sophomore' : 
-                element.year == memberYear.JUNIOR ? 'Junior' : 
-                element.year == memberYear.SENIOR ? 'Senior' : 
-                element.year == memberYear.FIFTH_YEAR ? 'Fifth Year Senior' : 
-                element.year == memberYear.GRAD ? 'Graduate' : ''
-              }}</p>
-              <p><strong>Major:</strong> {{ element.major }}</p>
+              <p *ngIf="element.year != null"><strong>Year:</strong> {{ element.year }}</p>
+              <p *ngIf="element.major != null"><strong>Major:</strong> {{ element.major }}</p>
               <p *ngIf="element.minor != null"><strong>Minor:</strong> {{ element.minor }}</p>
-              <p><strong>Description:</strong> {{ element.description }}</p>
+              <p *ngIf="element.description!= null"><strong>Description:</strong> {{ element.description }}</p>
               <!-- <button mat-stroked-button (click)="removeMember(element.user.id)">
                 Remove Member
               </button> -->

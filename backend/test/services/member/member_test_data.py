@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from backend.api import user
 from ..reset_table_id_seq import reset_table_id_seq
-from ....models.member import Member, MemberYear
+from ....models.member import Member
 from ....entities.member_entity import MemberEntity
 from ..organization.organization_test_data import cads, cssg
 from ..user_data import user, ambassador
@@ -16,7 +16,7 @@ sally_cads = Member(
     user_id=user.id,
     organization_id=cads.id,
     term="Spring 2024",
-    year=MemberYear.FRESHMAN,
+    year="Freshman",
     description="My name is Sally and I am a Freshman Computer Science Major.",
     isLeader=False,
     position=None,
@@ -29,7 +29,7 @@ amy_cads = Member(
     user_id=ambassador.id,
     organization_id=cads.id,
     term="Spring 2023",
-    year=MemberYear.SOPHOMORE,
+    year="Sophomore",
     description="My name is Amy and I am a Sophomore Computer Science Major. I am the VP of CADS.",
     isLeader=True,
     position="Vice President",
@@ -43,7 +43,7 @@ to_add_cssg = Member(
     user_id=user.id,
     organization_id=cssg.id,
     term="Fall 2023",
-    year=MemberYear.FRESHMAN,
+    year="Freshman",
     description="My name is Amy and I am a Freshman Computer Science Major.",
     isLeader=False,
     position=None,
@@ -56,7 +56,7 @@ updated_sally_cads = Member(
     user_id=user.id,
     organization_id=cads.id,
     term="Spring 2024",
-    year=MemberYear.FRESHMAN,
+    year="Freshman",
     description="My name is Sally and I am a Freshman Computer Science Major.",
     isLeader=True,
     position=None,
@@ -69,7 +69,7 @@ updated_amy_cads = Member(
     user_id=ambassador.id,
     organization_id=cads.id,
     term="Spring 2023",
-    year=MemberYear.SOPHOMORE,
+    year="Sophomore",
     description="My name is Amy and I am a Sophomore Computer Science Major. I am the VP of CADS.",
     isLeader=True,
     position="Vice President",

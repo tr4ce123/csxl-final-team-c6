@@ -7,7 +7,6 @@ from sqlalchemy import ForeignKey
 
 from backend.models.member import Member
 from backend.models.member_details import MemberDetails
-from backend.models.member import MemberYear
 from .entity_base import EntityBase
 
 
@@ -35,10 +34,10 @@ class MemberEntity(EntityBase):
     term: Mapped[str] = mapped_column(String, nullable=False, default="")
 
     # Year of the student
-    year: Mapped[MemberYear] = mapped_column(SQLAlchemyEnum(MemberYear), nullable=False)
+    year: Mapped[str] = mapped_column(String, nullable=True)
 
     # Description of the student
-    description: Mapped[str] = mapped_column(String, nullable=True, default="")
+    description: Mapped[str] = mapped_column(String, nullable=True)
 
     # Is the member a leader in the organization
     isLeader: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -47,7 +46,7 @@ class MemberEntity(EntityBase):
     position: Mapped[str] = mapped_column(String, nullable=True, default="Member")
 
     # Member major
-    major: Mapped[str] = mapped_column(String, nullable=False)
+    major: Mapped[str] = mapped_column(String, nullable=True)
 
     # Member minor
     minor: Mapped[str] = mapped_column(String, nullable=True)

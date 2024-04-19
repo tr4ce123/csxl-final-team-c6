@@ -7,6 +7,8 @@ import { profileResolver } from '../profile.resolver';
 import { Profile, ProfileService } from '../profile.service';
 import { CommunityAgreement } from 'src/app/shared/community-agreement/community-agreement.widget';
 import { MatDialog } from '@angular/material/dialog';
+import { Member } from 'src/app/organization/organization.model';
+import { MemberService } from 'src/app/organization/member.service';
 
 @Component({
   selector: 'app-profile-editor',
@@ -25,6 +27,14 @@ export class ProfileEditorComponent implements OnInit {
   public profile: Profile;
   public token: string;
   public showToken: boolean = false;
+  public memberships!: Member[];
+  public yearOptions = [
+    'Freshman',
+    'Sophomore',
+    'Junior',
+    'Senior',
+    'Graduate'
+  ];
 
   public profileForm = this.formBuilder.group({
     first_name: '',
@@ -33,12 +43,20 @@ export class ProfileEditorComponent implements OnInit {
     pronouns: ''
   });
 
+  public memberForm = this.formBuilder.group({
+    major: '',
+    minor: '',
+    year: '',
+    bio: ''
+  });
+
   constructor(
     route: ActivatedRoute,
     protected formBuilder: FormBuilder,
     protected profileService: ProfileService,
     protected snackBar: MatSnackBar,
-    protected dialog: MatDialog
+    protected dialog: MatDialog,
+    private memberService: MemberService
   ) {
     const form = this.profileForm;
     form.get('first_name')?.addValidators(Validators.required);
@@ -61,12 +79,29 @@ export class ProfileEditorComponent implements OnInit {
   ngOnInit(): void {
     let profile = this.profile;
 
+    this.loadMemberships();
+
     this.profileForm.setValue({
       first_name: profile.first_name,
       last_name: profile.last_name,
       email: profile.email,
       pronouns: profile.pronouns
     });
+  }
+
+  loadMemberships() {
+    this.memberService
+      .getUserMemberships(this.profile.id!)
+      .subscribe((memberships) => {
+        this.memberships = memberships;
+
+        this.memberForm.setValue({
+          major: this.memberships[0].major,
+          minor: this.memberships[0].minor,
+          year: this.memberships[0].year,
+          bio: this.memberships[0].description
+        });
+      });
   }
 
   displayToken(): void {
@@ -93,6 +128,35 @@ export class ProfileEditorComponent implements OnInit {
       this.profileService.put(this.profile).subscribe({
         next: (user) => this.onSuccess(user),
         error: (err) => this.onError(err)
+      });
+    }
+  }
+
+  submitOrganizationProfile(): void {
+    if (this.memberForm.valid) {
+      const formValues = this.memberForm.value;
+
+      this.memberships.forEach((member) => {
+        const updatedData = {
+          major: formValues.major!,
+          minor: formValues.minor!,
+          year: formValues.year!,
+          description: formValues.bio!
+        };
+
+        const updatedMember = { ...member, ...updatedData };
+
+        this.memberService.updateMember(updatedMember).subscribe({
+          next: () => {
+            this.snackBar.open(
+              'Organization Roster Profile Successfully Updated',
+              '',
+              {
+                duration: 2000
+              }
+            );
+          }
+        });
       });
     }
   }

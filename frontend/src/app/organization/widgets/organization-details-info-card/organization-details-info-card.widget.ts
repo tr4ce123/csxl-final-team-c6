@@ -153,7 +153,10 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
   joinOrganization() {
     if (this.organization?.org_type == this.organizationType.OPEN) {
       this.memberService
-        .addMember(this.organization?.slug, this.profile?.id!)
+        .joinOrganizationWithExistingDetails(
+          this.organization.slug,
+          this.profile?.id!
+        )
         .subscribe({
           next: () => {
             this.isMember = true;

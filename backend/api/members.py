@@ -41,7 +41,7 @@ def get_organization_members(
 
 
 @api.get("/{slug}/{term}", response_model=list[MemberDetails], tags=["Members"])
-def get_organization_members(
+def get_organization_members_by_term(
     slug: str,
     term: str,
     organization_service: OrganizationService = Depends(),
@@ -81,6 +81,53 @@ def get_member_by_id(
 
     return member_service.get_member_by_id(id)
 
+@api.get(
+    "/user/memberships/{user_id}", response_model=list[MemberDetails], tags=["Members"]
+)
+def get_user_memberships(
+    user_id: int,
+    member_service: MemberService = Depends(),
+    user_service: UserService = Depends(),
+) -> list[MemberDetails]:
+    """
+    Get all members associated with a user
+
+    Args:
+        user_id: the ID of the user to get the members of
+        member_service: the backing service
+        user_service: the backing service
+
+    Returns:
+        MemberDetails
+    """
+
+    user = user_service.get_by_id(user_id)
+    return member_service.get_user_memberships(user)
+
+@api.get(
+    "/user/memberships/{user_id}/{term}", response_model=list[MemberDetails], tags=["Members"]
+)
+def get_user_memberships_by_term(
+    user_id: int,
+    term: str,
+    member_service: MemberService = Depends(),
+    user_service: UserService = Depends(),
+) -> list[MemberDetails]:
+    """
+    Get all members associated with a user by term
+
+    Args:
+        user_id: the ID of the user to get the members of
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
+        member_service: the backing service
+        user_service: the backing service
+
+    Returns:
+        MemberDetails
+    """
+
+    user = user_service.get_by_id(user_id)
+    return member_service.get_user_memberships_by_term(user, term)
 
 @api.post("/{slug}/create/{user_id}", response_model=MemberDetails, tags=["Members"])
 def add_member(

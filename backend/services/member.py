@@ -4,7 +4,6 @@ The Member Service allows the API to manipulate member data in the database.
 
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
-from backend.entities.organization_entity import OrganizationEntity
 from backend.models.member_details import MemberDetails
 from backend.models.organization import Organization
 
@@ -12,7 +11,7 @@ from backend.models.user import User
 from backend.services.exceptions import ResourceNotFoundException
 from ..database import db_session
 from ..entities.member_entity import MemberEntity
-from ..models.member import Member, MemberYear
+from ..models.member import Member
 from ..models.organization_details import OrganizationDetails
 
 import datetime
@@ -92,6 +91,46 @@ class MemberService:
 
         return [entity.to_details_model() for entity in member_entities]
 
+    def get_user_memberships(self, subject: User) -> list[MemberDetails]:
+        """
+        Retrieves all of the member objects associated with a user
+
+        Parameters:
+            subject: A valid user
+
+        Returns:
+            list[MemberDetails]: List of all 'Member Details' that matches the users's id
+        """
+
+        member_entities = (
+            self._session.query(MemberEntity)
+            .where(MemberEntity.user_id == subject.id)
+            .all()
+        )
+
+        return [entity.to_details_model() for entity in member_entities]
+
+    def get_user_memberships_by_term(self, subject: User, term: str) -> list[MemberDetails]:
+        """
+        Retrieves all of the member objects associated with a user by term
+
+        Parameters:
+            subject: A valid user
+            term: string in format "Spring YYYY" or "Fall YYYY"
+
+        Returns:
+            list[MemberDetails]: List of all 'Member Details' that matches the users's id
+        """
+
+        member_entities = (
+            self._session.query(MemberEntity)
+            .where(MemberEntity.user_id == subject.id)
+            .where(MemberEntity.term == term)
+            .all()
+        )
+
+        return [entity.to_details_model() for entity in member_entities]
+
     def get_member_by_id(self, id: int) -> MemberDetails:
         """
         Retrieves a member based on its id
@@ -145,11 +184,11 @@ class MemberService:
             user_id=subject.id,
             organization_id=organization.id,
             term=get_current_term(),
-            year=MemberYear.FRESHMAN,
-            description="New Member",
+            year=None,
+            description=None,
             isLeader=False,
             position=None,
-            major="Computer Science",
+            major=None,
             minor=None,
         )
 

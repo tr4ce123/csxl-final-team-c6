@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { Profile } from 'src/app/models.module';
 import { profileResolver } from 'src/app/profile/profile.resolver';
-import { Member, Organization, MemberYear } from '../organization.model';
+import { Member, Organization } from '../organization.model';
 import {
   organizationDetailResolver,
   organizationMembersResolver
@@ -69,8 +69,6 @@ export class OrganizationRosterComponent {
   public organization: Organization;
 
   public members: Member[];
-
-  public memberYear = MemberYear;
 
   /** Store the columns to display in the table */
   public displayedColumns: string[] = ['name', 'position'];

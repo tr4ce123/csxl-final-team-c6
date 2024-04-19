@@ -66,6 +66,34 @@ def test_get_members_of_organization_by_term(
     assert len(fetched_members) == 1
 
 
+# Test 'MemberService.get_user_memberships()'
+
+
+def test_get_user_memberships(
+    member_svc_integration: MemberService,
+    user_svc_integration: UserService,
+):
+    """Test that all members associated with a user can be retrieved."""
+    user = user_svc_integration.get_by_id(3)
+    fetched_members = member_svc_integration.get_user_memberships(user)
+    assert fetched_members is not None
+    assert len(fetched_members) == 1
+
+
+# Test 'MemberService.get_user_memberships_by_term()'
+
+
+def test_get_user_memberships_by_term(
+    member_svc_integration: MemberService,
+    user_svc_integration: UserService,
+):
+    """Test that all members associated with a user can be retrieved for a given term."""
+    user = user_svc_integration.get_by_id(3)
+    fetched_members = member_svc_integration.get_user_memberships_by_term(user, "Spring 2024")
+    assert fetched_members is not None
+    assert len(fetched_members) == 1
+
+
 # Test 'MemberService.get_member_by_id()'
 
 
