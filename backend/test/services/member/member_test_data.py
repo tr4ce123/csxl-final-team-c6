@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from backend.api import user
 from ..reset_table_id_seq import reset_table_id_seq
-from ....models.member import Member, MemberYear
+from ....models.member import Member
 from ....entities.member_entity import MemberEntity
 from ..organization.organization_test_data import cads, cssg
 from ..user_data import user, ambassador
@@ -15,7 +15,8 @@ sally_cads = Member(
     id=1,
     user_id=user.id,
     organization_id=cads.id,
-    year=MemberYear.FRESHMAN,
+    term="Spring 2024",
+    year="Freshman",
     description="My name is Sally and I am a Freshman Computer Science Major.",
     isLeader=False,
     position=None,
@@ -27,7 +28,8 @@ amy_cads = Member(
     id=2,
     user_id=ambassador.id,
     organization_id=cads.id,
-    year=MemberYear.SOPHOMORE,
+    term="Spring 2023",
+    year="Sophomore",
     description="My name is Amy and I am a Sophomore Computer Science Major. I am the VP of CADS.",
     isLeader=True,
     position="Vice President",
@@ -40,7 +42,8 @@ members = [sally_cads, amy_cads]
 to_add_cssg = Member(
     user_id=user.id,
     organization_id=cssg.id,
-    year=MemberYear.FRESHMAN,
+    term="Fall 2023",
+    year="Freshman",
     description="My name is Amy and I am a Freshman Computer Science Major.",
     isLeader=False,
     position=None,
@@ -52,12 +55,26 @@ updated_sally_cads = Member(
     id=1,
     user_id=user.id,
     organization_id=cads.id,
-    year=MemberYear.FRESHMAN,
+    term="Spring 2024",
+    year="Freshman",
     description="My name is Sally and I am a Freshman Computer Science Major.",
     isLeader=True,
     position=None,
     major="Computer Science",
     minor=None,
+)
+
+updated_amy_cads = Member(
+    id=2,
+    user_id=ambassador.id,
+    organization_id=cads.id,
+    term="Spring 2023",
+    year="Sophomore",
+    description="My name is Amy and I am a Sophomore Computer Science Major. I am the VP of CADS.",
+    isLeader=True,
+    position="Vice President",
+    major="Computer Science",
+    minor="Stats",
 )
 
 

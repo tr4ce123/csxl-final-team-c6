@@ -78,5 +78,8 @@ export const organizationMembersResolver: ResolveFn<Member[] | undefined> = (
   route,
   state
 ) => {
-  return inject(MemberService).getMembers(route.paramMap.get('slug')!);
+  return inject(MemberService).getMembersByTerm(
+    route.paramMap.get('slug')!,
+    route.queryParamMap.get('term') || MemberService.getCurrentTerm()
+  );
 };

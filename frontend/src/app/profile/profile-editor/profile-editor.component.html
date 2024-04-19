@@ -66,3 +66,48 @@
     </mat-card-actions>
   </mat-card>
 </form>
+
+<form [formGroup]="memberForm" *ngIf="memberships?.length != 0" (ngSubmit)="submitOrganizationProfile()">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Update Your Public Organization Roster Profile</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Major</mat-label>
+        <input
+          matInput
+          formControlName="major"
+          name="major" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Minor</mat-label>
+        <input
+          matInput
+          formControlName="minor"
+          name="minor" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <mat-select formControlName="year" name="year">
+          <mat-option *ngFor="let year of yearOptions" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Bio</mat-label>
+        <input
+          matInput
+          formControlName="bio"
+          name="bio" />
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-stroked-button routerLink="/profile">Cancel</button>
+      <button mat-stroked-button type="submit" [disabled]="memberForm.invalid">
+        Save
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

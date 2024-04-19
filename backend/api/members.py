@@ -40,6 +40,30 @@ def get_organization_members(
     return member_service.get_members_of_organization(organization)
 
 
+@api.get("/{slug}/{term}", response_model=list[MemberDetails], tags=["Members"])
+def get_organization_members_by_term(
+    slug: str,
+    term: str,
+    organization_service: OrganizationService = Depends(),
+    member_service: MemberService = Depends(),
+) -> list[MemberDetails]:
+    """
+    Get the members of a specific organization by term.
+
+    Args:
+        slug: the slug of the organization
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
+        organization_service: the service to query organizations
+        member_service: the backing service
+
+    Returns:
+        list[MemberDetails]
+    """
+
+    organization = organization_service.get_by_slug(slug)
+    return member_service.get_members_of_organization_by_term(organization, term)
+
+
 @api.get("/id/{id}", response_model=MemberDetails, tags=["Members"])
 def get_member_by_id(
     id: int, member_service: MemberService = Depends()
@@ -57,11 +81,59 @@ def get_member_by_id(
 
     return member_service.get_member_by_id(id)
 
+@api.get(
+    "/user/memberships/{user_id}", response_model=list[MemberDetails], tags=["Members"]
+)
+def get_user_memberships(
+    user_id: int,
+    member_service: MemberService = Depends(),
+    user_service: UserService = Depends(),
+) -> list[MemberDetails]:
+    """
+    Get all members associated with a user
 
-@api.post("/{slug}/create/{user_id}", response_model=MemberDetails, tags=["Members"])
+    Args:
+        user_id: the ID of the user to get the members of
+        member_service: the backing service
+        user_service: the backing service
+
+    Returns:
+        MemberDetails
+    """
+
+    user = user_service.get_by_id(user_id)
+    return member_service.get_user_memberships(user)
+
+@api.get(
+    "/user/memberships/{user_id}/{term}", response_model=list[MemberDetails], tags=["Members"]
+)
+def get_user_memberships_by_term(
+    user_id: int,
+    term: str,
+    member_service: MemberService = Depends(),
+    user_service: UserService = Depends(),
+) -> list[MemberDetails]:
+    """
+    Get all members associated with a user by term
+
+    Args:
+        user_id: the ID of the user to get the members of
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
+        member_service: the backing service
+        user_service: the backing service
+
+    Returns:
+        MemberDetails
+    """
+
+    user = user_service.get_by_id(user_id)
+    return member_service.get_user_memberships_by_term(user, term)
+
+@api.post("/{slug}/create/{user_id}/{term}", response_model=MemberDetails, tags=["Members"])
 def add_member(
     slug: str,
     user_id: int,
+    term: str,
     user_service: UserService = Depends(),
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
@@ -72,6 +144,7 @@ def add_member(
     Args:
         slug: the slug of the organization
         user_id: the id of the user
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
         user_service: a valid User Service
         organization_service: a valid Organization Service
         member_service: the backing service
@@ -83,13 +156,14 @@ def add_member(
     user = user_service.get_by_id(user_id)
     organization: Organization = organization_service.get_by_slug(slug)
 
-    return member_service.add_member(user, organization)
+    return member_service.add_member(user, organization, term)
 
 
-@api.delete("/{slug}/delete/{user_id}", response_model=None, tags=["Members"])
+@api.delete("/{slug}/delete/{user_id}/{term}", response_model=None, tags=["Members"])
 def remove_member(
     slug: str,
     user_id: int,
+    term: str,
     user_service: UserService = Depends(),
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
@@ -100,6 +174,7 @@ def remove_member(
     Args:
         slug: the slug of the organization
         user_id: the id of the user
+        term: academic term in form "Spring YYYY" or "Fall YYYY"
         user_service: a valid User Service
         organization_service: a valid Organization Service
         member_service: the backing service
@@ -111,7 +186,7 @@ def remove_member(
     user = user_service.get_by_id(user_id)
     organization: Organization = organization_service.get_by_slug(slug)
 
-    return member_service.remove_member(user, organization)
+    return member_service.remove_member(user, organization, term)
 
 
 @api.put("", responses={404: {"model": None}}, response_model=Member, tags=["Members"])

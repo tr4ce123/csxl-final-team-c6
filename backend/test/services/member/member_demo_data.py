@@ -1,16 +1,16 @@
 from ....entities.member_entity import MemberEntity
 import pytest
 from sqlalchemy.orm import Session
-from ..user_data import user, ambassador, leader, mark, tammy, vicky
-from ..organization.organization_demo_data import cads, cssg
-from ....models.member import MemberYear
+from ..user_data import user, ambassador, leader, mark, tammy, vicky, morgan
+from ..organization.organization_demo_data import cads, cssg, acm
 from ..reset_table_id_seq import reset_table_id_seq
 
 larry_cads = MemberEntity(
-    id=2,
+    id=1,
     user_id=leader.id,
     organization_id=cads.id,
-    year=MemberYear.JUNIOR,
+    term="Spring 2024",
+    year="Junior",
     description="My name is Larry and I am a Junior Computer Science Major.",
     isLeader=True,
     position="President",
@@ -19,10 +19,11 @@ larry_cads = MemberEntity(
 )
 
 mark_cads = MemberEntity(
-    id=3,
+    id=2,
     user_id=mark.id,
     organization_id=cads.id,
-    year=MemberYear.JUNIOR,
+    term="Spring 2024",
+    year="Junior",
     description="My name is Mark and I am a Junior Computer Science Major.",
     isLeader=False,
     position=None,
@@ -31,10 +32,11 @@ mark_cads = MemberEntity(
 )
 
 mark_cssg = MemberEntity(
-    id=4,
+    id=3,
     user_id=mark.id,
     organization_id=cssg.id,
-    year=MemberYear.JUNIOR,
+    term="Spring 2024",
+    year="Junior",
     description="My name is Mark and I am a Junior Computer Science Major.",
     isLeader=False,
     position=None,
@@ -43,10 +45,11 @@ mark_cssg = MemberEntity(
 )
 
 tammy_cads = MemberEntity(
-    id=6,
+    id=4,
     user_id=tammy.id,
     organization_id=cads.id,
-    year=MemberYear.SENIOR,
+    term="Spring 2024",
+    year="Junior",
     description="My name is Tammy and I am a Senior Computer Science Major.",
     isLeader=False,
     position="Treasurer",
@@ -55,11 +58,12 @@ tammy_cads = MemberEntity(
 )
 
 vicky_cads = MemberEntity(
-    id=7,
+    id=5,
     user_id=vicky.id,
     organization_id=cads.id,
-    year=MemberYear.GRAD,
-    description="My name is Tammy and I am a Graduate Student Studying Computer Science.",
+    term="Spring 2024",
+    year="Graduate",
+    description="My name is Vicky and I am a Graduate Student Studying Computer Science.",
     isLeader=True,
     position="Vice President",
     major="Computer Science",
@@ -67,15 +71,68 @@ vicky_cads = MemberEntity(
 )
 
 amy_cssg = MemberEntity(
-    id=8,
+    id=6,
     user_id=ambassador.id,
     organization_id=cssg.id,
-    year=MemberYear.SENIOR,
-    description="My name is Tammy and I am a Senior Computer Science Major.",
+    term="Spring 2024",
+    year="Senior",
+    description="My name is Amy and I am a Senior Computer Science Major.",
     isLeader=True,
     position="President",
     major="Computer Science",
     minor=None,
+)
+
+amy_cssg_2023 = MemberEntity(
+    id=7,
+    user_id=ambassador.id,
+    organization_id=cssg.id,
+    term="Fall 2023",
+    year="Senior",
+    description="My name is Amy and I am a Senior Computer Science Major.",
+    isLeader=False,
+    position=None,
+    major="Computer Science",
+    minor=None,
+)
+
+morgan_acm = MemberEntity(
+    id=8,
+    user_id=morgan.id,
+    organization_id=acm.id,
+    term="Spring 2024",
+    year="Senior",
+    description="My name is Morgan and I am a Sophomore CS Major.",
+    isLeader=False,
+    position=None,
+    major="Biology",
+    minor="CS",
+)
+
+vicky_acm_F2023 = MemberEntity(
+    id=9,
+    user_id=vicky.id,
+    organization_id=acm.id,
+    term="Fall 2023",
+    year="Graduate",
+    description="My name is Vicky and I am a Graduate Student Studying Computer Science.",
+    isLeader=False,
+    position=None,
+    major="Computer Science",
+    minor=None,
+)
+
+mark_cads_F2023 = MemberEntity(
+    id=10,
+    user_id=mark.id,
+    organization_id=cads.id,
+    term="Fall 2023",
+    year="Junior",
+    description="My name is Mark and I am a Junior Computer Science Major.",
+    isLeader=True,
+    position="Vice President",
+    major="Computer Science",
+    minor="Data Science",
 )
 
 
@@ -86,6 +143,10 @@ members = [
     tammy_cads,
     vicky_cads,
     amy_cssg,
+    amy_cssg_2023,
+    morgan_acm,
+    vicky_acm_F2023,
+    mark_cads_F2023,
 ]
 
 

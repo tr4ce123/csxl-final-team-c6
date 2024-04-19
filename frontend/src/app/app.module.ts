@@ -41,7 +41,7 @@ import { AboutComponent } from './about/about.component';
 import { GateComponent } from './gate/gate.component';
 import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.component';
 import { SharedModule } from './shared/shared.module';
-import { OrganizationApplicationComponent } from './organization/organization-application/organization-application.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -79,6 +79,7 @@ import { OrganizationApplicationComponent } from './organization/organization-ap
     MatToolbarModule,
     MatTooltipModule,
     MatCheckboxModule,
+    MatSelectModule,
     FormsModule,
     RouterModule,
     SharedModule,

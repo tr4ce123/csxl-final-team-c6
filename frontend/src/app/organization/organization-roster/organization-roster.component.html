@@ -11,9 +11,25 @@
   </mat-card-content>
 </mat-card> -->
 <!-- eslint-disable prettier/prettier -->
+<!-- <mat-form-field appearance="fill">
+  <mat-label>Select Term</mat-label>
+  <mat-select [(value)]="selectedTerm" (selectionChange)="loadMembersForTerm()">
+    <mat-option *ngFor="let term of terms" [value]="term">{{ term }}</mat-option>
+  </mat-select>
+</mat-form-field> -->
 <mat-card class="content" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>Our Members</mat-card-title>
+    <div style="display: flex; flex-direction: row; width: 100%">
+      <mat-card-title
+        >{{ selectedTerm }} Roster</mat-card-title
+      >
+      <mat-form-field style="margin-left: auto" appearance="outline">
+        <mat-label>Select Term</mat-label>
+        <mat-select [(value)]="selectedTerm" (selectionChange)="loadMembersForTerm()">
+          <mat-option *ngFor="let term of terms" [value]="term">{{ term }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </mat-card-header>
   <mat-card-content>
     <table mat-table [dataSource]="members" multiTemplateDataRows>
@@ -35,6 +51,7 @@
           <div style="display: flex; flex-direction: row-reverse">
             <button
             mat-icon-button
+            *ngIf="element.year != null || element.major != null || element.minor != null || element.description != null"
             aria-label="expand row"
             (click)="
               expandedElement = expandedElement === element ? null : element;
@@ -62,17 +79,10 @@
               element === expandedElement ? 'expanded' : 'collapsed'
             ">
             <div>
-              <p><strong>Year:</strong> {{ 
-                element.year == memberYear.FRESHMAN ? 'Freshman' : 
-                element.year == memberYear.SOPHOMORE ? 'Sophomore' : 
-                element.year == memberYear.JUNIOR ? 'Junior' : 
-                element.year == memberYear.SENIOR ? 'Senior' : 
-                element.year == memberYear.FIFTH_YEAR ? 'Fifth Year Senior' : 
-                element.year == memberYear.GRAD ? 'Graduate' : ''
-              }}</p>
-              <p><strong>Major:</strong> {{ element.major }}</p>
+              <p *ngIf="element.year != null"><strong>Year:</strong> {{ element.year }}</p>
+              <p *ngIf="element.major != null"><strong>Major:</strong> {{ element.major }}</p>
               <p *ngIf="element.minor != null"><strong>Minor:</strong> {{ element.minor }}</p>
-              <p><strong>Description:</strong> {{ element.description }}</p>
+              <p *ngIf="element.description!= null"><strong>Description:</strong> {{ element.description }}</p>
               <!-- <button mat-stroked-button (click)="removeMember(element.user.id)">
                 Remove Member
               </button> -->

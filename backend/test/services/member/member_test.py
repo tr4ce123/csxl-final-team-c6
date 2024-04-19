@@ -26,8 +26,10 @@ from backend.test.services.core_data import setup_insert_data_fixture
 # Data Models for Fake Data Inserted in Setup
 from backend.test.services.member.member_test_data import (
     sally_cads,
+    amy_cads,
     to_add_cssg,
     updated_sally_cads,
+    updated_amy_cads,
 )
 
 
@@ -48,6 +50,50 @@ def test_get_members_of_organization(
     assert isinstance(fetched_members[0], MemberDetails)
 
 
+# Test 'MemberService.get_members_of_organization_by_term()'
+
+
+def test_get_members_of_organization_by_term(
+    member_svc_integration: MemberService,
+    organization_svc_integration: OrganizationService,
+):
+    """Test that all members of a given organization can be retrieved for a given term."""
+    organization = organization_svc_integration.get_by_slug("cads")
+    fetched_members = member_svc_integration.get_members_of_organization_by_term(
+        organization, "Spring 2024"
+    )
+    assert fetched_members is not None
+    assert len(fetched_members) == 1
+
+
+# Test 'MemberService.get_user_memberships()'
+
+
+def test_get_user_memberships(
+    member_svc_integration: MemberService,
+    user_svc_integration: UserService,
+):
+    """Test that all members associated with a user can be retrieved."""
+    user = user_svc_integration.get_by_id(3)
+    fetched_members = member_svc_integration.get_user_memberships(user)
+    assert fetched_members is not None
+    assert len(fetched_members) == 1
+
+
+# Test 'MemberService.get_user_memberships_by_term()'
+
+
+def test_get_user_memberships_by_term(
+    member_svc_integration: MemberService,
+    user_svc_integration: UserService,
+):
+    """Test that all members associated with a user can be retrieved for a given term."""
+    user = user_svc_integration.get_by_id(3)
+    fetched_members = member_svc_integration.get_user_memberships_by_term(user, "Spring 2024")
+    assert fetched_members is not None
+    assert len(fetched_members) == 1
+
+
 # Test 'MemberService.get_member_by_id()'
 
 
@@ -57,6 +103,7 @@ def test_get_member_by_id(member_svc_integration: MemberService):
     assert fetched_member is not None
     assert isinstance(fetched_member, MemberDetails)
     assert fetched_member.id == sally_cads.id
+
 
 def test_get_member_by_id_does_not_exist(member_svc_integration: MemberService):
     """Test that you cannot retrieve a member with an ID that does not exist."""
@@ -75,7 +122,7 @@ def test_add_member(
     """Test that a member is able to be created."""
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cssg")
-    created_member = member_svc_integration.add_member(user, organization)
+    created_member = member_svc_integration.add_member(user, organization, "Spring 2024")
     assert created_member is not None
     assert created_member.id is not None
     assert created_member.organization_id is not None
@@ -91,7 +138,7 @@ def test_add_member_already_exists(
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cads")
     with pytest.raises(HTTPException):
-        member_svc_integration.add_member(user, organization)
+        member_svc_integration.add_member(user, organization, "Spring 2024")
 
 
 # Test 'MemberService.remove_member()'
@@ -105,7 +152,7 @@ def test_remove_member(
     """Test that a member is able to be deleted."""
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cads")
-    member_svc_integration.remove_member(user, organization)
+    member_svc_integration.remove_member(user, organization, "Spring 2024")
     with pytest.raises(ResourceNotFoundException):
         member_svc_integration.get_member_by_id(1)
 
@@ -119,7 +166,8 @@ def test_remove_member_does_not_exist(
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cssg")
     with pytest.raises(ResourceNotFoundException):
-        member_svc_integration.remove_member(user, organization)
+        member_svc_integration.remove_member(user, organization, "Spring 2024")
+
 
 # Test 'MemberService.update_member()'
 
@@ -130,9 +178,16 @@ def test_update_member(
     """Test that a member is properly updated."""
     member_svc_integration.update_member(updated_sally_cads)
     assert member_svc_integration.get_member_by_id(1).isLeader == True
+    assert member_svc_integration.get_member_by_id(1).term == "Spring 2024"
 
 
 def test_update_member_does_not_exist(member_svc_integration: MemberService):
     """Test updating a member that does not exist."""
     with pytest.raises(ResourceNotFoundException):
         member_svc_integration.update_member(to_add_cssg)
+
+
+def test_update_member_from_previous_term(member_svc_integration: MemberService):
+    """Test updating a past term's membership does not work."""
+    with pytest.raises(HTTPException):
+        member_svc_integration.update_member(updated_amy_cads)
