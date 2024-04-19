@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Route } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { isAuthenticated } from 'src/app/gate/gate.guard';
 import { profileResolver } from '../profile.resolver';
 import { Profile, ProfileService } from '../profile.service';
@@ -17,7 +17,7 @@ import { MemberService } from 'src/app/organization/member.service';
 })
 export class ProfileEditorComponent implements OnInit {
   public static Route: Route = {
-    path: 'profile',
+    path: 'edit',
     component: ProfileEditorComponent,
     title: 'Profile',
     canActivate: [isAuthenticated],
@@ -63,6 +63,7 @@ export class ProfileEditorComponent implements OnInit {
     protected profileService: ProfileService,
     protected snackBar: MatSnackBar,
     protected dialog: MatDialog,
+    private router: Router,
     private memberService: MemberService
   ) {
     const form = this.profileForm;
@@ -95,7 +96,7 @@ export class ProfileEditorComponent implements OnInit {
       pronouns: profile.pronouns
     });
   }
-
+  
   loadMemberships() {
     this.memberService
       .getUserMembershipsByTerm(this.profile.id!, this.selectedTerm)
@@ -108,15 +109,6 @@ export class ProfileEditorComponent implements OnInit {
           bio: this.memberships[0].description
         });
       });
-  }
-
-  displayToken(): void {
-    this.showToken = !this.showToken;
-  }
-
-  copyToken(): void {
-    navigator.clipboard.writeText(this.token);
-    this.snackBar.open('Token Copied', '', { duration: 2000 });
   }
 
   onSubmit(): void {
@@ -161,6 +153,7 @@ export class ProfileEditorComponent implements OnInit {
                 duration: 2000
               }
             );
+            this.router.navigate(['/profile']);
           }
         });
       });
@@ -168,30 +161,11 @@ export class ProfileEditorComponent implements OnInit {
   }
 
   private onSuccess(profile: Profile) {
+    this.router.navigate(['/profile']);
     this.snackBar.open('Profile Saved', '', { duration: 2000 });
   }
 
   private onError(err: any) {
     console.error('How to handle this?');
-  }
-
-  linkWithGitHub(): void {
-    this.profileService.getGitHubOAuthLoginURL().subscribe((url) => {
-      window.location.href = url;
-    });
-  }
-
-  unlinkGitHub() {
-    this.profileService.unlinkGitHub().subscribe({
-      next: () => (this.profile.github = '')
-    });
-  }
-
-  openAgreementDialog(): void {
-    const dialogRef = this.dialog.open(CommunityAgreement, {
-      autoFocus: 'dialog'
-    });
-    this.profileService.profile$.subscribe();
-    dialogRef.afterClosed().subscribe();
   }
 }

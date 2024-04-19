@@ -51,8 +51,7 @@ import { MatSelectModule } from '@angular/material/select';
     ErrorDialogComponent,
     HomeComponent,
     AboutComponent,
-    GateComponent,
-    ProfileEditorComponent
+    GateComponent
   ],
   imports: [
     /* Angular */
