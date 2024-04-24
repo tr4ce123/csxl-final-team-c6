@@ -12,8 +12,8 @@ class Applicant(BaseModel):
     """
     Pydantic Model to represent an 'applicant' of an Organization.
 
-    This model is based on the `MemberEntity` model, which defines the shape
-    of the `Member` database in the PostgreSQL database
+    This model is based on the `ApplicantEntity` model, which defines the shape
+    of the `Applicant` database in the PostgreSQL database
     """
 
     id: int

@@ -1,0 +1,15 @@
+
+  
+.position-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+  
+  
+.link-button {
+    margin-left: 8px;
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+

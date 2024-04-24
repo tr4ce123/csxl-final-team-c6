@@ -83,3 +83,17 @@ export const organizationMembersResolver: ResolveFn<Member[] | undefined> = (
     route.queryParamMap.get('term') || MemberService.getCurrentTerm()
   );
 };
+
+export const organizationMemberDetailResolver: ResolveFn<Member | undefined> = (
+  route,
+  state
+) => {
+  return inject(MemberService)
+    .getMemberById(+route.paramMap.get('id')!)
+    .pipe(
+      catchError((error) => {
+        console.log(error);
+        return of(undefined);
+      })
+    );
+};

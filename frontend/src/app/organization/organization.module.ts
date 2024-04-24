@@ -45,6 +45,7 @@ import { OrganizationEditorComponent } from '/workspace/frontend/src/app/organiz
 import { OrganizationNotFoundCard } from './widgets/organization-not-found-card/organization-not-found-card.widget';
 import { OrganizationApplicantsComponent } from './organization-applicants/organization-applicants.component';
 import { OrganizationApplicationComponent } from './organization-application/organization-application.component';
+import { OrganizationEditMemberComponent } from './organization-edit-member/organization-edit.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { OrganizationApplicationComponent } from './organization-application/org
     OrganizationRosterComponent,
     OrganizationApplicantsComponent,
     OrganizationApplicationComponent,
+    OrganizationEditMemberComponent,
 
     // Pipes
     OrganizationFilterPipe,

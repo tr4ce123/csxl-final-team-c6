@@ -70,9 +70,13 @@ export class OrganizationRosterComponent {
 
   public members: Member[];
 
+  public isLeader: boolean = false;
+
   // TODO: Find better way to do this
   // Maybe have a function in Member Service to query it???
   terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
+
+  currentTerm: string = MemberService.getCurrentTerm();
 
   // Default to current term
   selectedTerm: string = MemberService.getCurrentTerm();
@@ -85,8 +89,8 @@ export class OrganizationRosterComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private memberService: MemberService
+    protected router: Router,
+    protected memberService: MemberService
   ) {
     const data = this.route.snapshot.data as {
       profile: Profile;
@@ -96,6 +100,10 @@ export class OrganizationRosterComponent {
     this.profile = data.profile;
     this.organization = data.organization;
     this.members = this.sortMembersAlphabetically(data.members);
+  }
+
+  ngOnInit() {
+    this.checkMembership();
   }
 
   loadMembersForTerm() {
@@ -108,21 +116,20 @@ export class OrganizationRosterComponent {
       });
   }
 
+  checkMembership() {
+    this.memberService
+      .getMembersByTerm(this.organization?.slug!, this.selectedTerm)
+      .subscribe((members) => {
+        this.isLeader = members.some(
+          (member) =>
+            member.user_id == this.profile?.id && member.isLeader == true
+        );
+      });
+  }
+
   private sortMembersAlphabetically(members: Member[]): Member[] {
     return members.sort((a, b) =>
       a.user.first_name!.localeCompare(b.user.first_name!)
     );
   }
-
-  // removeMember(user_id: number) {
-  //   this.memberService
-  //     .deleteMember(this.organization?.slug!, user_id)
-  //     .subscribe({
-  //       next: () => {
-  //         this.members = this.members.filter(
-  //           (member) => member.user.id !== user_id
-  //         );
-  //       }
-  //     });
-  // }
 }

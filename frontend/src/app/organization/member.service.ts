@@ -44,6 +44,13 @@ export class MemberService {
     return this.http.get<Member[]>('/api/members/' + slug);
   }
 
+  /** Get a member by its ID using the backend HTTP get request.
+   * @returns {Observable<Member>}
+   */
+  getMemberById(id: number): Observable<Member> {
+    return this.http.get<Member>(`/api/members/id/id/${id}`);
+  }
+
   /** Get all member entries for a given term from the backend database table using HTTP get request
    * @returns {Observable<Member[]>}
    */
@@ -71,17 +78,17 @@ export class MemberService {
    * @param slug: The organization to delete the member from
    * @returns void
    */
-  deleteMember(slug: string, user_id: number, term: string): Observable<any> {
-    return this.http.delete(`/api/members/${slug}/delete/${user_id}/${term}`);
+  deleteMember(slug: string, userId: number, term: string): Observable<any> {
+    return this.http.delete(`/api/members/${slug}/delete/${userId}/${term}`);
   }
 
   /** Create a member object using the backend HTTP post request.
    * @param slug: The organization to add the member to
    * @returns void
    */
-  addMember(slug: string, user_id: number, term: string): Observable<Member> {
+  addMember(slug: string, userId: number, term: string): Observable<Member> {
     return this.http.post<Member>(
-      `/api/members/${slug}/create/${user_id}/${term}`,
+      `/api/members/${slug}/create/${userId}/${term}`,
       {}
     );
   }

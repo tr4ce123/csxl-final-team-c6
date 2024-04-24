@@ -64,7 +64,7 @@ def get_organization_members_by_term(
     return member_service.get_members_of_organization_by_term(organization, term)
 
 
-@api.get("/id/{id}", response_model=MemberDetails, tags=["Members"])
+@api.get("/id/id/{id}", response_model=MemberDetails, tags=["Members"])
 def get_member_by_id(
     id: int, member_service: MemberService = Depends()
 ) -> MemberDetails:

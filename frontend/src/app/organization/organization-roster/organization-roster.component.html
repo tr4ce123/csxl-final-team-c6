@@ -83,9 +83,12 @@
               <p *ngIf="element.major != null"><strong>Major:</strong> {{ element.major }}</p>
               <p *ngIf="element.minor != null"><strong>Minor:</strong> {{ element.minor }}</p>
               <p *ngIf="element.description!= null"><strong>Description:</strong> {{ element.description }}</p>
-              <!-- <button mat-stroked-button (click)="removeMember(element.user.id)">
-                Remove Member
-              </button> -->
+              <button 
+                mat-icon-button color="basic"
+                *ngIf="isLeader && element.term == currentTerm"
+                (click)="router.navigate(['/organizations', organization.slug, 'edit', element.id])">
+                <mat-icon>edit</mat-icon>
+              </button>
             </div>
           </div>
         </td>

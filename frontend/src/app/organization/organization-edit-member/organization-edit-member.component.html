@@ -1,0 +1,49 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title> {{ member.user.first_name }} {{ member.user.last_name }} </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <!-- Position Form -->
+    <form (ngSubmit)="updatePosition()" class="position-form">
+      <mat-form-field appearance="fill">
+        <mat-label>Position</mat-label>
+        <input matInput [(ngModel)]="member.position" name="position" required>
+      </mat-form-field>
+      <button mat-stroked-button (click)="updatePosition()">Update Position</button>
+    </form>
+
+    <mat-card-actions>
+      <button 
+        mat-stroked-button
+        class="link-button"
+        *ngIf="member.isLeader == false"  
+        (click)="toggleLeader()">
+        Grant Leader Permissions
+      </button>
+      <button 
+        mat-stroked-button
+        class="link-button"
+        *ngIf="member.isLeader" 
+        (click)="toggleLeader()">
+        Revoke Leader Permissions
+      </button>
+      <button 
+        mat-stroked-button
+        class="link-button"
+        (click)="removeMember()">
+        Remove Member
+      </button>
+      <button 
+        mat-stroked-button 
+        class="link-button"
+        (click)="router.navigate(['/organizations', organization.slug, 'roster'])">
+        Back
+      </button>
+    </mat-card-actions>
+
+    <div *ngIf="!member">
+      <p>Error: Member with ID {{ memberId }} not found.</p>
+    </div>
+  </mat-card-content>
+</mat-card>
+

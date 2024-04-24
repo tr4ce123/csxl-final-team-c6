@@ -15,6 +15,7 @@ import { OrganizationEditorComponent } from './organization-editor/organization-
 import { OrganizationApplicantsComponent } from './organization-applicants/organization-applicants.component';
 import { OrganizationRosterComponent } from './organization-roster/organization-roster.component';
 import { OrganizationApplicationComponent } from './organization-application/organization-application.component';
+import { OrganizationEditMemberComponent } from './organization-edit-member/organization-edit.component';
 
 const routes: Routes = [
   OrganizationPageComponent.Route,
@@ -22,7 +23,8 @@ const routes: Routes = [
   OrganizationEditorComponent.Route,
   OrganizationApplicantsComponent.Route,
   OrganizationRosterComponent.Route,
-  OrganizationApplicationComponent.Route
+  OrganizationApplicationComponent.Route,
+  OrganizationEditMemberComponent.Route
 ];
 
 @NgModule({
