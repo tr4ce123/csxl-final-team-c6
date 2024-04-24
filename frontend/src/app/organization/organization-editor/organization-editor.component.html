@@ -42,6 +42,21 @@
         <mat-label>Slug</mat-label>
         <input matInput placeholder="" formControlName="slug" name="slug" />
       </mat-form-field>
+      <!-- Organization Status -->
+      <mat-form-field appearance="outline">
+        <mat-label>Organization Status</mat-label>
+        <mat-select formControlName="org_type" name="org_type">
+          <mat-option *ngFor="let orgType of orgTypeOptions" [value]="orgType">
+            {{
+              orgType === 0
+                ? 'Open'
+                : orgType === 1
+                ? 'Application-Based'
+                : 'Closed'
+            }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <!-- Logo Field -->
       <mat-form-field appearance="outline" color="accent">
         <mat-label>Logo Link</mat-label>

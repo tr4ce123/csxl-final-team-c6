@@ -20,7 +20,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { profileResolver } from 'src/app/profile/profile.resolver';
 import { PermissionService } from 'src/app/permission.service';
-import { Organization } from '../organization.model';
+import { Organization, OrganizationType } from '../organization.model';
 import { OrganizationService } from '../organization.service';
 import { Profile } from 'src/app/profile/profile.service';
 import { organizationDetailResolver } from '../organization.resolver';
@@ -72,12 +72,20 @@ export class OrganizationEditorComponent {
   /** Store the organization id. */
   organization_slug: string = 'new';
 
+  /** Different organization status options */
+  public orgTypeOptions = [
+    OrganizationType.OPEN,
+    OrganizationType.APP,
+    OrganizationType.CLOSED
+  ];
+
   /** Add validators to the form */
   name = new FormControl('', [Validators.required]);
   slug = new FormControl('', [
     Validators.required,
     Validators.pattern('^(?!new$)[a-z0-9-]+$')
   ]);
+  orgType = new FormControl(OrganizationType.OPEN, [Validators.required]);
   logo = new FormControl('', [Validators.required]);
   email = new FormControl('', [Validators.email]);
   shortDescription = new FormControl('', [
@@ -90,6 +98,7 @@ export class OrganizationEditorComponent {
   public organizationForm = this.formBuilder.group({
     name: this.name,
     slug: this.slug,
+    org_type: this.orgType,
     logo: this.logo,
     short_description: this.shortDescription,
     long_description: this.longDescription,
@@ -128,6 +137,7 @@ export class OrganizationEditorComponent {
     this.organizationForm.setValue({
       name: this.organization.name,
       slug: this.organization.slug,
+      org_type: this.organization.org_type,
       shorthand: this.organization.shorthand,
       logo: this.organization.logo,
       short_description: this.organization.short_description,
