@@ -72,9 +72,7 @@ export class OrganizationRosterComponent {
 
   public isLeader: boolean = false;
 
-  // TODO: Find better way to do this
-  // Maybe have a function in Member Service to query it???
-  terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
+  terms: string[] = MemberService.getTerms();
 
   currentTerm: string = MemberService.getCurrentTerm();
 

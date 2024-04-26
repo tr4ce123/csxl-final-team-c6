@@ -32,8 +32,6 @@ export class OrganizationEditMemberComponent {
   public memberId: number;
   public profile: Profile;
 
-  terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
-
   selectedTerm: string = MemberService.getCurrentTerm();
 
   constructor(

@@ -51,7 +51,7 @@
           <div style="display: flex; flex-direction: row-reverse">
             <button
             mat-icon-button
-            *ngIf="element.year != null || element.major != null || element.minor != null || element.description != null"
+            *ngIf="element.year != null || element.major != null || element.minor != null || element.description != null || isLeader"
             aria-label="expand row"
             (click)="
               expandedElement = expandedElement === element ? null : element;

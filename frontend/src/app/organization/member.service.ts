@@ -26,15 +26,35 @@ export class MemberService {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth();
-    let term: string;
 
-    if (month >= 0 && month <= 5) {
-      term = 'Spring';
-    } else {
-      term = 'Fall';
-    }
+    let term = month <= 5 ? 'Spring' : 'Fall';
 
     return `${term} ${year}`;
+  }
+
+  /** Static method that gets the most recent 4 terms */
+  static getTerms(): string[] {
+    const now = new Date();
+    let terms: string[] = [];
+    let year = now.getFullYear();
+    const month = now.getMonth();
+
+    let currentTerm = month <= 5 ? 'Spring' : 'Fall';
+
+    terms.push(`${currentTerm} ${year}`);
+
+    // Push the last four semesters into the array
+    for (let i = 0; i <= 3; i++) {
+      if (currentTerm == 'Spring') {
+        currentTerm = 'Fall';
+        year--;
+      } else {
+        currentTerm = 'Spring';
+      }
+      terms.push(`${currentTerm} ${year}`);
+    }
+    // Reverse to ensure oldest to newest order
+    return terms.reverse();
   }
 
   /** Get all member entries from the backend database table using the backend HTTP get request.

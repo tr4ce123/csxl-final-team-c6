@@ -50,10 +50,6 @@ export class ProfileEditorComponent implements OnInit {
     bio: ''
   });
 
-  // TODO: Find better way to do this
-  // Maybe have a function in Member Service to query it???
-  terms: string[] = ['Spring 2024', 'Fall 2023', 'Spring 2023'];
-
   // Default to current term
   selectedTerm: string = MemberService.getCurrentTerm();
 
@@ -96,7 +92,7 @@ export class ProfileEditorComponent implements OnInit {
       pronouns: profile.pronouns
     });
   }
-  
+
   loadMemberships() {
     this.memberService
       .getUserMembershipsByTerm(this.profile.id!, this.selectedTerm)
