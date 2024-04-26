@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable, ReplaySubject, Subscription, switchMap } from 'rxjs';
+import { Observable, Subscription, switchMap } from 'rxjs';
 import { Member } from './organization.model';
 import { Profile, ProfileService } from '../profile/profile.service';
 

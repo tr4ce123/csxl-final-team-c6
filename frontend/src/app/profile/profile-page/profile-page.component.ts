@@ -14,6 +14,8 @@ import { Profile, ProfileService } from '../profile.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CommunityAgreement } from 'src/app/shared/community-agreement/community-agreement.widget';
+import { MemberService } from 'src/app/organization/member.service';
+import { Organization } from 'src/app/organization/organization.model';
 
 @Component({
   selector: 'app-profile-page',
@@ -32,6 +34,7 @@ export class ProfilePageComponent {
   };
 
   profile: Profile;
+  associatedOrganizations!: Organization[];
 
   /** Bearer Token Fields */
   public token: string;
@@ -39,10 +42,11 @@ export class ProfilePageComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    protected router: Router,
     protected profileService: ProfileService,
     protected snackBar: MatSnackBar,
-    protected dialog: MatDialog
+    protected dialog: MatDialog,
+    protected memberSrvc: MemberService
   ) {
     /** Get currently-logged-in user. */
     const data = this.route.snapshot.data as {
@@ -57,6 +61,8 @@ export class ProfilePageComponent {
 
     /** Get bearer token from local storage. */
     this.token = `${localStorage.getItem('bearerToken')}`;
+
+    this.loadAssociatedOrganizations();
   }
 
   /** Display Bearer Token */
@@ -91,5 +97,19 @@ export class ProfilePageComponent {
     });
     this.profileService.profile$.subscribe();
     dialogRef.afterClosed().subscribe();
+  }
+
+  /** Display a list of Orgs that the User is a member of */
+  loadAssociatedOrganizations() {
+    this.memberSrvc
+      .getUserMembershipsByTerm(
+        this.profile.id!,
+        MemberService.getCurrentTerm()
+      )
+      .subscribe((memberships) => {
+        this.associatedOrganizations = memberships.map(
+          (member) => member.organization
+        );
+      });
   }
 }

@@ -68,6 +68,27 @@
             </div>
           </mat-card-actions>
         </mat-card>
+
+        <!-- Org List mat-card -->
+
+        <mat-card class="organization-list">
+          <mat-card-header>
+            <mat-card-title>My Organizations</mat-card-title>
+          </mat-card-header>
+          <mat-card-actions class="profile-management-actions">
+            <div class="action-section" *ngFor="let org of associatedOrganizations">
+              <div class="action-buttons">
+                  <img mat-card-image src="{{ org.logo }}" class="logo" alt="Organization Logo"/>
+                  <button
+                    class="action-button"
+                    mat-stroked-button
+                    (click)="router.navigate(['/organizations', org.slug])">
+                    {{org.name}}
+                  </button>
+                </div>
+            </div>
+          </mat-card-actions>
+        </mat-card>
       </div>
     </div>
   </div>

@@ -41,6 +41,12 @@
   padding: 0 16px 16px 16px;
 }
 
+.logo {
+  margin-right: 10px;
+  width: 10%;
+  border-radius: 50% !important;
+}
+
 .action-section {
   width: 100% !important;
 }
@@ -54,10 +60,12 @@
 .action-buttons {
   display: flex;
   flex: 1;
+  margin-top: 10px;
 }
 
 .action-button {
   margin-right: 10px;
+  margin-top: 4px;
   white-space: normal;
   word-wrap: normal;
 }
@@ -87,4 +95,5 @@
     flex-direction: column;
     row-gap: 12px;
   }
+  
 }
