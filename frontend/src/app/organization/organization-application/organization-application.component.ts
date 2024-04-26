@@ -72,6 +72,14 @@ export class OrganizationApplicationComponent {
   /** Store the currently-logged-in user's profile.  */
   public profile: Profile | null = null;
 
+  public yearOptions = [
+    'Freshman',
+    'Sophomore',
+    'Junior',
+    'Senior',
+    'Graduate'
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,

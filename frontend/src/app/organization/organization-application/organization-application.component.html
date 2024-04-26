@@ -44,9 +44,13 @@
       </mat-form-field>
 
       <!-- Year -->
-      <mat-form-field appearance="outline" color="accent">
+      <mat-form-field appearance="outline">
         <mat-label>Year</mat-label>
-        <input matInput placeholder="Year" formControlName="year" name="year" />
+        <mat-select formControlName="year" name="year">
+          <mat-option *ngFor="let year of yearOptions" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
       <!-- Pronouns -->
