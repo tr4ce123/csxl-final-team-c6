@@ -66,35 +66,34 @@ As **Rhonda Root**, I want to be able to do anything any persona can do but for 
   - We need to create entirely new database tables and schemas to store the organization information, but they will need to be on top of the existing database tables like users and organizations.
     - **Members** Table that relates **users** with **orgs** and adds a role attribute.
     - Table that relates organizations to their member-only information/events feed (may need to be two separate tables).
-    - **Applications** Table that holds all pending applications for all organizations.
+    - **Applications** Table that holds all pending applications for all organizations and relates **users** with **orgs**.
   - We will need to add or extend several frontend components to accomodate for the new pages seen in the wireframes (member lists, organization pages, forms, etc.).
 - ### **Page Components and Widgets**
   - Organization Details Component: We will have to modify the currently existing organization component to display more data shown in our wireframe. There will a button to either join, request to join, view pending applications, edit the organization, or leave the club based on respective personas. There will also be text that shows if the club is closed in this component.
+    - Organization Leading Roles: Adding a new mat-card to the Organization Details Component to display the names and the roles of current leaders of the organization. This section will also have a button that routes to the organization's Roster Component.
   - Organization Application Component: A form that will be filled out by students trying to apply to application-only organizations.
-  - Organization Leading Roles Widget: Adding a new widget to the Organization Details Component to display the names and the roles of current leaders of the organization.
   - Members Only Organization Events Widget: Create a new widget that displays a list of member only events on the Organization Details Component that is only viewable by a member or leader.
-  - Roster Component: Page that will list all of the members for a given organization for members/admins to view. Will display Member Widgets for every member of the organization with drop-down menus.
-  - Member Widget: Widget that will display the member's name and role in the org. It will have a drop-down that expands the widget and displays more information about the member (Major, Year, etc.) This info will vary depending on the user interacting with it. For instance, a leader should see an edit button where they can edit the member's role or remove them; however, a regular member should not see this for other members.
-  - Edit Member Component: Create a new component that allows for leaders to assign a role to any student on their roster or remove a member from their organization.
-  - Pending Applicant Component: Page that will list all students that have submitted a request to join form as widgets.
-  - Pending Applicant Widget: Widget that will display the applicant's name. It will have a drop-down that expands the widget and displays all of the info they provided in the request to join form along with an accept and reject button.
+  - Roster Component: A page that will list all of the members for a given organization for members/admins to view. Will display a table displaying all members of an organization with drop-down menus to show more information. This table will also include an edit button for each member (row) that only leaders will be able to see.
+  - Edit Member Component: Create a new component that allows for leaders to assign a position to any student on their roster, remove a member from their organization, or give them leader privileges.
+  - Pending Applicants Component: Page that will list all students that have submitted a request to join form. These will be displayed in a very similar way to the mat-table in the Roster Component. Each row will store a different applicant and there will be a drop down that displays all of the info they provided in their application. Instead of an edit button for every member, there will be an accept and reject button for every applicant.
   - Event Editor Component: Make use of the "public" attribute in the Event Entity to allow for an event to be marked members only in the form.
-  - Profile Editor Component: Edit the existing profile to add a "Your Orgs" list in the form of clickable buttons that take you to that organization's details page.
+  - Profile Editor Component: Edit the existing profile to add a "Your Orgs" list in the form of clickable buttons that take you to that organization's details page. Also, create a "public profile" form that allows members to alter the information shown on the organization roster page.
 - ### **Models**
   - Organization: We will add a type attribute to the organization model to let leaders declare the type of organization they are (open, closed, application-based).
-  - Member: Model used to store a user, an organization, and the user's role in the organization.
-  - Organization Application: Model used to store metadata from a user's application to a given organization. It will also store the user and the organization.
+  - Member: Model used to store a user, an organization, the user's position and leadership in the organization, and some public information the user will be able to alter.
+  - Organization Applicant: Model used to store metadata from a user's application to a given organization. It will also store the user and the organization.
   - Event: We will use the existing event model with the "public" field as the members' only attribute. We can edit this model as needed.
 - ### **API / Routes**
   - Get All Organizations (/organizations): Returns the current available organization model. Intended purpose is to inform users what organizations are available/unavailable. Used by all personas.
   - Get Organization (/organizations/{slug}): Returns the current organization model. Intended purpose is to display a given available organization. Used by all personas.
-  - Post Organization Application (/organization/{slug}/applications): Receives user information after appliyng to an organization. Intended purpose is to post a request for the users to apply to an organization.
-  - Get All Members (/organizations/{slug}/members): Returns all members for the given organization. Intended purpose is to display the name and info for each member in the organization. Used by all personas.
-  - Get Member (/organizations/{slug}/members/{user_pid}): Returns a member model. Intended to be used on the edit member page. Used by leaders and root.
-  - Delete Member (/organizations/{slug}/members/{user_pid}): Removes the member from the organization.
-  - Post Member (/organizations/{slug}/applications/{user_pid}): Accepts the student's application and adds them to the organization.
-  - Delete Organization Application (/organizations/{slug}/applications/{user_pid}): Rejects the student's application and deletes their application from the database.
-  - Put Member (/organizations/{slug}/members/{user_pid}): Updates the member model (likely only used to update role).
+  - Post Applicant (/applicants/{slug}): Receives user information after appliyng to an organization. Intended purpose is to post a request for the users to apply to an organization.
+  - Get All Members of an Organization (/members/{slug}): Returns all members for the given organization. Intended purpose is to display the name and info for each member in the organization. Used by all personas.
+  - Get All Members of an Organization by Term (/members/{slug}/{term}): Returns all members for the given organization based on a term. Intended purpose is to display the name and info for each member in the organization for a given term. Used by all personas.
+  - Get Member by ID (/members/id/id/{id}): Returns a member model. Intended to be used on the edit member page. Used by leaders and root.
+  - Delete Member (/members/{slug}/members/{user_id}): Removes the member from the organization.
+  - Post Member (/members/{slug}/create/{user_id}/{term}): Accepts the student's application and adds them to the organization, or allows a student to add themselves to an organization if it is open.
+  - Delete Applicant (/applicants/{id}): Rejects the student's application and deletes their application from the database.
+  - Put Member (/members): Updates the member model.
 - ### **Security and Privacy concerns**
   - Only members of an organization should be able to see member-only information and events.
   - Only **Rhonda Root** and **Larry Leader** will be add and remove members from organizations and edit the organization's details.
