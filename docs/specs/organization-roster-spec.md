@@ -72,24 +72,16 @@ Created an OrganizationType class in order to determine whether a certain organi
 
 ## 1. Member
 ```py3
-class MemberYear(Enum):
-    FRESHMAN = 1
-    SOPHOMORE = 2
-    JUNIOR = 3
-    SENIOR = 4
-    FIFTH_YEAR = 5
-    GRAD = 6
-
 class Member(BaseModel):
     id: int | None = None
     user_id: int | None = None
     organization_id: int | None = None
     term: str
-    year: MemberYear
+    year: str | None = None
     description: str | None = None
     isLeader: bool
     position: str | None = "Member"
-    major: str
+    major: str | None = None
     minor: str | None = None
 ```
 Pydantic model to represent a member without user and organization to avoid circular dependencies. Created MemberYear enum to represent a member's current academic status.
@@ -109,7 +101,6 @@ class ApplicantStatus(Enum):
     PENDING = 0
     ACCEPTED = 1
     REJECTED = -1
-
 
 class Applicant(BaseModel):
     id: int
