@@ -84,6 +84,7 @@ class Member(BaseModel):
     id: int | None = None
     user_id: int | None = None
     organization_id: int | None = None
+    term: str
     year: MemberYear
     description: str | None = None
     isLeader: bool
@@ -135,15 +136,18 @@ class ApplicantDetails(Applicant):
 Pydantic model to represent an Applicant. This model is based on the `ApplicantEntity` model, which defines the shape of the `Applicant` database in the PostgreSQL database.
 
 ## API Routes
-The Organization Roster feature adds 10 new API routes to handle CRUD operations.
+The Organization Roster feature adds 13 new API routes to handle CRUD operations.
 Member and Applicant APIs.
 ![image](https://github.com/comp423-24s/csxl-final-team-c6/assets/111467809/0ea559ad-9cd5-4170-808e-58bf76e1511f)
 | Table Name        | Resource              | Description                                                |
 | ----------------- | ------------------- | ---------------------------------------------------------- |
 | `members.get`          | `"/{slug}"`      | Get the members of a specific organization.   |
-| `members.get`       | `"/id/{id}"`   | Get a member by its ID.                            |
-| `members.post`       | `"/{slug}/create/{user_id}"`   | Have a user become a member of an organization.                            |
-| `members.delete`       | `"/{slug}/delete/{user_id}"`   | Remove a member from an organization.                            |
+| `members.get`          | `"/{slug}/{term}"`      | Get the members of a specific organization by term.   |
+| `members.get`       | `"/id/id/{id}"`   | Get a member by its ID.                            |
+| `members.get`       | `"/user/memberships/{user_id}"`   | Get all members associated with a specific user.                            |
+| `members.get`       | `"/user/memberships/{user_id}/{term}"`   | Get all members associated with a specific user by term.   |
+| `members.post`       | `"/{slug}/create/{user_id}/{term}"`   | Have a user become a member of an organization during the current term.        |
+| `members.delete`       | `"/{slug}/delete/{user_id}/{term}"`   | Remove a member from an organization of a specific term.                  |
 | `members.put`       | `""`   | Updates a member.                            |
 | `applicants.get`       | `"/{slug}"`   | Get the applicants of a specific organization.                            |
 | `applicants.post`       | `"/{slug}"`   | Have a user become an applicant of an organization.                            |
@@ -245,11 +249,18 @@ These methods are used to create and delete members with the backend. This servi
 
 #### Applicant Service
 
-The Member Service introduces 3 new methods:
+The Member Service introduces 11 new methods:
 
-1. getMembers: Retrieves all members of an organization.
-2. addMember: Creates a new member object, giving a user membeership of an organization.
-3. deleteMember: Deletes a member object, revokes a users membership of an organization.
+1. getCurrentTerm: Static method that retrieves the current term.
+3. getMembers: Retrieves all members of an organization.
+4. getMemberById: Retrieves a single member.
+5. getMembersByTerm: Retrieves all members of an organization based on a provided term.
+6. getUserMemberships: Retrieves all members associated with a user.
+7. getUserMembershipsByTerm: Retrieves all members associated with a user based on a provided term.
+8. addMember: Creates a new member, giving a user membership of an organization.
+9. deleteMember: Deletes a member, revokes a user's membership of an organization.
+10. updateMember: Updates a member.
+11. joinOrganizationWithExistingDetails: Joins an organization and applies existing member metadata to all members already associated with the user of the current term.
 
 These methods are used to create and delete members with the backend. This service's purpose is to interact with members in the backend. 
 
