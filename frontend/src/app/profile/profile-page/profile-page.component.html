@@ -76,6 +76,7 @@
             <mat-card-title>My Organizations</mat-card-title>
           </mat-card-header>
           <mat-card-actions class="profile-management-actions">
+            <p class="section-title" *ngIf="associatedOrganizations.length === 0"> Join organizations to see them listed here </p>
             <div class="action-section" *ngFor="let org of associatedOrganizations">
               <div class="action-buttons">
                   <img mat-card-image src="{{ org.logo }}" class="logo" alt="Organization Logo"/>

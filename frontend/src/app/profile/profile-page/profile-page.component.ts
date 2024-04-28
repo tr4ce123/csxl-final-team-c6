@@ -34,7 +34,7 @@ export class ProfilePageComponent {
   };
 
   profile: Profile;
-  associatedOrganizations!: Organization[];
+  associatedOrganizations: Organization[] = [];
 
   /** Bearer Token Fields */
   public token: string;
