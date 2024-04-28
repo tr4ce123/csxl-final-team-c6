@@ -146,6 +146,22 @@ class MemberService:
         Returns:
             MemberDetails
         """
+        # For permissions, If ROOT, create Leader Model
+        if subject.id == 1:
+            return MemberDetails(
+                id=None,
+                user_id=subject.id,
+                organization_id=organization.id,
+                year=None,
+                term=get_current_term(),
+                description=None,
+                isLeader=True,
+                position=None,
+                major=None,
+                minor=None,
+                user=subject,
+                organization=organization,
+            )
 
         member_entity = (
             self._session.query(MemberEntity)
