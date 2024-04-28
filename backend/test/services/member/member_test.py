@@ -89,9 +89,44 @@ def test_get_user_memberships_by_term(
 ):
     """Test that all members associated with a user can be retrieved for a given term."""
     user = user_svc_integration.get_by_id(3)
-    fetched_members = member_svc_integration.get_user_memberships_by_term(user, "Spring 2024")
+    fetched_members = member_svc_integration.get_user_memberships_by_term(
+        user, "Spring 2024"
+    )
     assert fetched_members is not None
     assert len(fetched_members) == 1
+
+
+# Test 'MemberService.get_member_by_user_and_org'
+
+
+def test_get_member_by_user_and_org(
+    member_svc_integration: MemberService,
+    organization_svc_integration: OrganizationService,
+    user_svc_integration: UserService,
+):
+    """Test that we can get a member off of the user and organization"""
+    subject = user_svc_integration.get_by_id(3)  # Sally
+    org = organization_svc_integration.get_by_slug("cads")
+
+    member = member_svc_integration.get_member_by_user_and_org(subject, org)
+
+    assert member is not None
+    assert type(member) is MemberDetails
+    assert member.user_id == 3
+    assert member.organization_id == org.id
+
+
+def test_get_member_by_user_and_org_does_not_exist(
+    member_svc_integration: MemberService,
+    organization_svc_integration: OrganizationService,
+    user_svc_integration: UserService,
+):
+    """Test that we can get a member off of the user and organization"""
+    subject = user_svc_integration.get_by_id(3)  # Sally
+    org = organization_svc_integration.get_by_slug("cssg")
+
+    with pytest.raises(ResourceNotFoundException):
+        member_svc_integration.get_member_by_user_and_org(subject, org)
 
 
 # Test 'MemberService.get_member_by_id()'
@@ -122,7 +157,9 @@ def test_add_member(
     """Test that a member is able to be created."""
     user = user_svc_integration.get_by_id(3)
     organization = organization_svc_integration.get_by_slug("cssg")
-    created_member = member_svc_integration.add_member(user, organization, "Spring 2024")
+    created_member = member_svc_integration.add_member(
+        user, organization, "Spring 2024"
+    )
     assert created_member is not None
     assert created_member.id is not None
     assert created_member.organization_id is not None

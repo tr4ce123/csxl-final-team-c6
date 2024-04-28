@@ -110,7 +110,9 @@ class MemberService:
 
         return [entity.to_details_model() for entity in member_entities]
 
-    def get_user_memberships_by_term(self, subject: User, term: str) -> list[MemberDetails]:
+    def get_user_memberships_by_term(
+        self, subject: User, term: str
+    ) -> list[MemberDetails]:
         """
         Retrieves all of the member objects associated with a user by term
 
@@ -130,6 +132,36 @@ class MemberService:
         )
 
         return [entity.to_details_model() for entity in member_entities]
+
+    def get_member_by_user_and_org(
+        self, subject: User, organization: Organization
+    ) -> MemberDetails:
+        """
+        Retrieves the member object if the user is a member of the organization this term.
+
+        Parameters:
+            subject: the user we are requesting
+            organization: the organiztion we are requesting
+
+        Returns:
+            MemberDetails
+        """
+
+        member_entity = (
+            self._session.query(MemberEntity)
+            .filter(MemberEntity.user_id == subject.id)
+            .filter(MemberEntity.organization_id == organization.id)
+            .filter(MemberEntity.term == get_current_term())
+            .one_or_none()
+        )
+
+        # Check if result is null
+        if member_entity is None:
+            raise ResourceNotFoundException(
+                f"User {subject.id} not a member of organization {organization.id}"
+            )
+
+        return member_entity.to_details_model()
 
     def get_member_by_id(self, id: int) -> MemberDetails:
         """
@@ -156,7 +188,9 @@ class MemberService:
 
         return member_entity.to_details_model()
 
-    def add_member(self, subject: User, organization: Organization, term: str) -> MemberDetails:
+    def add_member(
+        self, subject: User, organization: Organization, term: str
+    ) -> MemberDetails:
         """
         Creates a Member that acts as a relationship between a User and an Organization they want to join
 
@@ -197,7 +231,9 @@ class MemberService:
 
         return member_entity.to_details_model()
 
-    def remove_member(self, subject: User, organization: Organization, term: str) -> None:
+    def remove_member(
+        self, subject: User, organization: Organization, term: str
+    ) -> None:
         """
         Removes a member from an organization
 
