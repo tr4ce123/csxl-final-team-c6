@@ -1,25 +1,11 @@
 from ....entities.member_entity import MemberEntity
 import pytest
 from sqlalchemy.orm import Session
-from ..user_data import root, ambassador, leader, mark, tammy, vicky, morgan
+from ..user_data import ambassador, leader, mark, tammy, vicky, morgan
 from ..organization.organization_demo_data import (
-    appteam,
     acm,
-    bit,
     cads,
-    carvr,
     cssg,
-    ctf,
-    enablingtech,
-    esports,
-    gamedev,
-    gwc,
-    hacknc,
-    ktp,
-    pearlhacks,
-    pm,
-    queerhack,
-    wics,
 )
 from ..reset_table_id_seq import reset_table_id_seq
 
