@@ -1,8 +1,26 @@
 from ....entities.member_entity import MemberEntity
 import pytest
 from sqlalchemy.orm import Session
-from ..user_data import user, ambassador, leader, mark, tammy, vicky, morgan
-from ..organization.organization_demo_data import cads, cssg, acm
+from ..user_data import root, ambassador, leader, mark, tammy, vicky, morgan
+from ..organization.organization_demo_data import (
+    appteam,
+    acm,
+    bit,
+    cads,
+    carvr,
+    cssg,
+    ctf,
+    enablingtech,
+    esports,
+    gamedev,
+    gwc,
+    hacknc,
+    ktp,
+    pearlhacks,
+    pm,
+    queerhack,
+    wics,
+)
 from ..reset_table_id_seq import reset_table_id_seq
 
 larry_cads = MemberEntity(
@@ -135,6 +153,229 @@ mark_cads_F2023 = MemberEntity(
     minor="Data Science",
 )
 
+# Need to add Rhonda Root to ALL orgs for permissions to work
+# Pretty inefficient solution, but see PR for Issue #79 for reasoning/alt solutions
+root_appteam = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=appteam.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_acm = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=acm.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_bit = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=bit.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_cads = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=cads.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_carvr = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=carvr.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_cssg = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=cssg.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_ctf = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=ctf.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_enablingtech = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=enablingtech.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_esports = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=esports.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_gamedev = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=gamedev.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_gwc = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=gwc.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_hacknc = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=hacknc.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_ktp = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=ktp.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_pearlhacks = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=pearlhacks.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_pm = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=pm.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_queerhack = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=queerhack.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
+root_wics = MemberEntity(
+    id=1,
+    user_id=root.id,
+    organization_id=wics.id,
+    term="Spring 2024",
+    year=None,
+    description="Root",
+    isLeader=True,
+    position=None,
+    major=None,
+    minor=None,
+)
+
 
 members = [
     larry_cads,
@@ -147,6 +388,23 @@ members = [
     morgan_acm,
     vicky_acm_F2023,
     mark_cads_F2023,
+    root_appteam,
+    root_acm,
+    root_bit,
+    root_cads,
+    root_carvr,
+    root_cssg,
+    root_ctf,
+    root_enablingtech,
+    root_esports,
+    root_gamedev,
+    root_gwc,
+    root_hacknc,
+    root_ktp,
+    root_pearlhacks,
+    root_pm,
+    root_queerhack,
+    root_wics,
 ]
 
 
