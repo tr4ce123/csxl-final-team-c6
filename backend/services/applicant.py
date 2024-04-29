@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from backend.entities.organization_entity import OrganizationEntity
 from backend.entities.applicant_entity import ApplicantEntity
+from backend.entities.user_entity import UserEntity
 from backend.models.applicant_details import ApplicantDetails
 from backend.models.applicant import Applicant, ApplicantStatus
 from backend.models.organization import Organization
@@ -64,6 +65,27 @@ class ApplicantService:
             raise ResourceNotFoundException("No applicant with this ID found.")
 
         return applicant.to_model()
+
+    def get_user_applications(self, subject: User) -> list[ApplicantDetails]:
+        """Gets all applications associated with a user."""
+
+        user = (
+            self._session.query(UserEntity).where(
+                UserEntity.id == subject.id
+            )
+        ).one_or_none()
+        if not user:
+            raise ResourceNotFoundException(
+                f"No uesr with id {subject.id} exists."
+            )
+
+        applicant_entities = (
+            self._session.query(ApplicantEntity)
+            .where(ApplicantEntity.user_id == subject.id)
+            .all()
+        )
+
+        return [entity.to_model() for entity in applicant_entities]
 
     def add_applicant_of_organization(
         self, subject: User, organization: OrganizationDetails, application: Applicant

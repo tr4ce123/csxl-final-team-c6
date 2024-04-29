@@ -36,6 +36,16 @@ def get_organization_applicants_by_id(
 
     return application_service.get_applicant_by_id(id)
 
+@api.get("/applications/{user_id}", response_model=list[ApplicantDetails], tags=["Applicants"])
+def get_user_applications(
+    user_id: int,
+    application_service: ApplicantService = Depends(),
+    user_service: UserService = Depends()
+) -> list[ApplicantDetails]:
+
+    user = user_service.get_by_id(user_id)
+    return application_service.get_user_applications(user)
+
 
 @api.post("/{slug}", response_model=ApplicantDetails, tags=["Applicants"])
 def new_applicant(

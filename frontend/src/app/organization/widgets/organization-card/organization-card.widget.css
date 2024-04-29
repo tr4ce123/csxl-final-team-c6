@@ -36,11 +36,11 @@ mat-card {
 }
 
 .status-indicator {
-    width: 10px; /* Example size for the circle */
-    height: 10px; /* Example size for the circle */
-    border-radius: 50%; /* Makes it a circle */
-    display: inline-block; /* Allows width and height to be set */
-    margin-left: auto; /* Aligns the circle to the right */
+    width: 10px; 
+    height: 10px; 
+    border-radius: 50%; 
+    display: inline-block; 
+    margin-left: auto; 
 }
 
 .green {

@@ -15,7 +15,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CommunityAgreement } from 'src/app/shared/community-agreement/community-agreement.widget';
 import { MemberService } from 'src/app/organization/member.service';
-import { Organization } from 'src/app/organization/organization.model';
+import {
+  Applicant,
+  ApplicantStatus,
+  Organization
+} from 'src/app/organization/organization.model';
+import { ApplicantService } from 'src/app/organization/applicant.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -34,7 +39,9 @@ export class ProfilePageComponent {
   };
 
   profile: Profile;
-  associatedOrganizations: Organization[] = [];
+  associatedOrganizations!: Organization[];
+  applications!: Applicant[];
+  applicationStatus = ApplicantStatus;
 
   /** Bearer Token Fields */
   public token: string;
@@ -46,7 +53,8 @@ export class ProfilePageComponent {
     protected profileService: ProfileService,
     protected snackBar: MatSnackBar,
     protected dialog: MatDialog,
-    protected memberSrvc: MemberService
+    protected memberService: MemberService,
+    protected applicantService: ApplicantService
   ) {
     /** Get currently-logged-in user. */
     const data = this.route.snapshot.data as {
@@ -63,6 +71,7 @@ export class ProfilePageComponent {
     this.token = `${localStorage.getItem('bearerToken')}`;
 
     this.loadAssociatedOrganizations();
+    this.loadApplications();
   }
 
   /** Display Bearer Token */
@@ -101,7 +110,7 @@ export class ProfilePageComponent {
 
   /** Display a list of Orgs that the User is a member of */
   loadAssociatedOrganizations() {
-    this.memberSrvc
+    this.memberService
       .getUserMembershipsByTerm(
         this.profile.id!,
         MemberService.getCurrentTerm()
@@ -111,5 +120,29 @@ export class ProfilePageComponent {
           (member) => member.organization
         );
       });
+  }
+
+  loadApplications() {
+    this.applicantService
+      .getUserApplications(this.profile.id!)
+      .subscribe((applications) => {
+        this.applications = applications;
+      });
+  }
+
+  deleteApplication(id: number) {
+    this.applicantService.removeApplicant(id).subscribe({
+      next: () => {
+        this.snackBar.open('You have withdrawn your application.', '', {
+          duration: 2000
+        });
+        this.loadApplications();
+      },
+      error: () => {
+        this.snackBar.open('Failed to withdrawal application.', '', {
+          duration: 2000
+        });
+      }
+    });
   }
 }

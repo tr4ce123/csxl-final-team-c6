@@ -111,7 +111,9 @@ export class OrganizationApplicationComponent {
         minor: this.applicationForm.value.minor ?? null,
         year: this.applicationForm.value.year!,
         pronouns: this.applicationForm.value.pronouns!,
-        interest: this.applicationForm.value.interest!
+        interest: this.applicationForm.value.interest!,
+        user: this.profile!,
+        organization: this.organization
       };
       console.log('Past new applicant');
       this.applicantService

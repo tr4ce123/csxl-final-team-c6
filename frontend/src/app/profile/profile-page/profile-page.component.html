@@ -90,6 +90,35 @@
             </div>
           </mat-card-actions>
         </mat-card>
+
+        <!-- Application Status mat-card -->
+
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>My Applications</mat-card-title>
+          </mat-card-header>
+          <mat-card-actions class="profile-management-actions">
+            <p class="section-title" *ngIf="applications.length === 0"> You have not submitted any applications </p>
+            <div class="action-section" *ngFor="let app of applications">
+              <p class="section-title"> {{ app.organization.name }} </p>
+              <span class="status-indicator"
+                [class.green]="app.status === applicationStatus.Accepted"
+                [class.yellow]="app.status === applicationStatus.Pending"
+                [class.red]="app.status === applicationStatus.Rejected">
+              </span>
+                {{ app.status === applicationStatus.Pending ? 'Pending' :
+                app.status === applicationStatus.Rejected ? 'Rejected' :
+                app.status === applicationStatus.Accepted ? 'Accepted' : '' }}
+              <button 
+                  mat-stroked-button 
+                  class="action-button"
+                  (click)="deleteApplication(app.id)"
+                  *ngIf="app.status === applicationStatus.Pending">
+                  Withdrawal Application
+                </button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
       </div>
     </div>
   </div>

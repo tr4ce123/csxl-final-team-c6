@@ -79,7 +79,7 @@
           <button mat-stroked-button *ngIf="!isMember && organization?.org_type === organizationType.OPEN" (click)="joinOrganization()">
             Join Organization
           </button>
-          <button mat-stroked-button *ngIf="!isMember && organization?.org_type === organizationType.APP && !appIsPending" (click)="router.navigate(['/organizations', organization.slug, 'application'])">
+          <button mat-stroked-button *ngIf="!isMember && organization?.org_type === organizationType.APP && !hasApplied" (click)="router.navigate(['/organizations', organization.slug, 'application'])">
             Apply To Join
           </button>
           <button mat-stroked-button *ngIf="organization?.org_type == organizationType.APP && isLeader" mat-button (click)="viewPendingApplications()">
@@ -88,7 +88,8 @@
           <button mat-stroked-button *ngIf="isMember" (click)="leaveOrganization()">
             Leave Organization
           </button>
-          <p *ngIf="appIsPending"> Your Application is Pending </p>
+          <p *ngIf="appStatus == applicantStatus.Rejected"> Your Application was Rejected </p>
+          <p *ngIf="appStatus == applicantStatus.Pending"> Your Application is Pending </p>
         </div>
       </div>
     </div>

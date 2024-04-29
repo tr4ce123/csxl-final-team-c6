@@ -25,6 +25,11 @@ export class ApplicantService {
     return this.http.get<Applicant>('/api/applicants/' + 'id/' + id);
   }
 
+  // Returns all applications associated with a user
+  getUserApplications(userId: number): Observable<Applicant[]> {
+    return this.http.get<Applicant[]>('/api/applicants/applications/' + userId);
+  }
+
   // Returns the new application object
   createApplicant(slug: string, application: Applicant): Observable<Applicant> {
     return this.http.post<Applicant>('/api/applicants/' + slug, application);

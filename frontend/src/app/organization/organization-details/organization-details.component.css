@@ -26,6 +26,12 @@
   border: 0.01px solid #93929286;
 }
 
+.card-actions {
+  display: flex;
+  justify-content: flex-end; 
+  padding: 20px;
+}
+
 .position {
   font-size: 0.9em;
   color: #757575; 

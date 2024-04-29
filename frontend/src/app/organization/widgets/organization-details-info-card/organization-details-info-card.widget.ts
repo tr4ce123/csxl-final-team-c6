@@ -12,6 +12,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
+  Applicant,
   ApplicantStatus,
   Organization,
   OrganizationType
@@ -46,7 +47,9 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
   /** Holds data on whether or not the user is a member of the organization */
   public isMember: boolean = false;
 
-  public appIsPending: boolean = false;
+  public appStatus!: ApplicantStatus;
+
+  public hasApplied: boolean = false;
 
   public isLeader: boolean = false;
 
@@ -116,13 +119,15 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
 
   checkApplicationStatus() {
     this.applicantService
-      .getApplicants(this.organization?.slug!)
+      .getUserApplications(this.profile?.id!)
       .subscribe((applicants) => {
-        this.appIsPending = applicants.some(
+        const apps: Applicant[] = applicants.filter(
           (applicant) =>
             applicant.user_id == this.profile?.id &&
-            applicant.status == this.applicantStatus.Pending
+            applicant.organization_id == this.organization?.id
         );
+        this.appStatus = apps[0].status;
+        this.hasApplied = apps.length !== 0;
       });
   }
 

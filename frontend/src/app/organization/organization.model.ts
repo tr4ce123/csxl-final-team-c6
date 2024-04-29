@@ -69,4 +69,6 @@ export interface Applicant {
   year: string;
   pronouns: string;
   interest: string;
+  user: Profile;
+  organization: Organization;
 }

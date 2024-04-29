@@ -71,6 +71,23 @@ def test_get_applicant_by_id_does_not_exist(
     with pytest.raises(ResourceNotFoundException):
         applicant_svc_integration.get_applicant_by_id(1000)
 
+def test_get_user_applications(
+    applicant_svc_integration: ApplicantService,
+    user_svc_integration: UserService,
+):
+    """Test that all applicants associated with a user can be retrieved."""
+    user = user_svc_integration.get_by_id(3)
+    fetched_applicants = applicant_svc_integration.get_user_applications(user)
+    assert fetched_applicants is not None
+    assert len(fetched_applicants) == 1
+
+def test_get_user_applications_does_not_exist(
+    applicant_svc_integration: ApplicantService,
+    user_svc_integration: UserService,
+):
+    """Test that you cannot retrieve applicants of a user that does not exist."""
+    with pytest.raises(ResourceNotFoundException):
+        applicant_svc_integration.get_user_applications(user_svc_integration.get_by_id(1000))
 
 def test_add_applicant(
     applicant_svc_integration: ApplicantService,

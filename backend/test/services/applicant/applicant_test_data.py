@@ -7,6 +7,7 @@ from backend.api import user
 from backend.models.organization import Organization
 from backend.test.services.reset_table_id_seq import reset_table_id_seq
 from backend.models.applicant import Applicant, ApplicantStatus
+from backend.models.organization import OrganizationType
 from backend.entities.applicant_entity import ApplicantEntity
 from backend.test.services.organization.organization_test_data import cads, cssg
 from backend.test.services.user_data import user, ambassador
@@ -86,7 +87,7 @@ bad_org = Organization(
     youtube="none",
     heel_life="none",
     public=False,
-    org_type=1,  # Application-Based but doesn't matter
+    org_type=OrganizationType.APP,  # Application-Based but doesn't matter
 )
 
 
