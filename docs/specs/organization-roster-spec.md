@@ -205,14 +205,13 @@ Development concerns: This section is designed for new developers interested in 
 
 ## Frontend Concerns
 
-The Organization Member Roster feature contains 3 components and 1 service. Users can access this feature by routing to the organization details page by clicking on the organization tab on the navigation bar and clicking on any organization's details button. Adding onto the pre-existing structure of the organization details page was a key factor in our ease of development and design choices. Not only does it aid in the UI/UX of this section of the application, but it allows future developers to easily familiarize themselves with the code. 
+The Organization Member Roster feature contains 4 components and 2 services. Users can access this feature by routing to the organization details page by clicking on the organization tab on the navigation bar and clicking on any organization's details button. Adding onto the pre-existing structure of the organization details page was a key factor in our ease of development and design choices. Not only does it aid in the UI/UX of this section of the application, but it allows future developers to easily familiarize themselves with the code. 
 
 ### Components
 
 #### Organization Roster Component:
 
-This component holds a table that displays all of the members of an organization where the default view shows their name and their position. A clickable dropdown shows more information about each member (their major, minor, year, and bio). A registered user is able to see all members of every club and their public information. This component has access to the member service that holds business logic to make HTTP Requests to the backend. We decided to have users access this component through a button on the already-existing Organization Details Component. Clicking 'View Full Roster' will navigate the user to the Organization Roster Component. Leaders of an organization will have a different view that will show an 'Edit Member' button. Clicking this button will navigate the leader to the Edit Member Component.
-
+This component holds a table that displays all of the members of an organization where the default view shows their name and their position. A clickable dropdown shows more information about each member (their major, minor, year, and bio). A registered user is able to see all members of every club and their public information. Leaders of an organization will have a different view that will show an 'Edit Member' button. Clicking this button will navigate the leader to the Edit Member Component. This component has access to the member service that holds business logic to make HTTP Requests to the backend. We decided to have users access this component through a button on the already-existing Organization Details Component. Clicking 'View Full Roster' will navigate the user to the Organization Roster Component. 
 
 #### Organization Application Component:
 
@@ -222,23 +221,15 @@ This component holds a form that any user can fill out and submit. This componen
 
 This component holds a table that displays all pending applicants of an organization. This component has access to the applicant service and the member service that holds business logic to make HTTP Requests. Only the leaders of an organization will have a 'View Pending Applicants' button displayed on the Oragnization Details Info Card Widget on the Organization Details Component. Navigating to the applicants page, a leader will see all of the users who have applied to the organization and will be able to accept or reject applicants via a drop down button. 
 
-#### TODO: Edit Member Component
+#### Edit Member Component
+
+This component contains a form field and various action buttons to change the state of a member. This component has access to the member service that holds the business logic to update a member in the backend through an HTTP Request. Only the leaders of an organization will be able to view an edit button on the organization roster to access this component. When a leader navigates to this page, it will display the member's current information (position and leadership permissions), a form field to change the member's position, a button to toggle leadership permissions, and a button to remove the member from the organization.
 
 ### Services
 
 The two services we introduced are the Member Service and the Applicant Service which can be found in the Organization Folder
 
 #### Member Service
-
-The Member Service introduces 3 new methods:
-
-1. getMembers: Retrieves all members of an organization.
-2. addMember: Creates a new member object, giving a user membeership of an organization.
-3. deleteMember: Deletes a member object, revokes a users membership of an organization.
-
-These methods are used to create and delete members with the backend. This service's purpose is to interact with members in the backend. 
-
-#### Applicant Service
 
 The Member Service introduces 11 new methods:
 
@@ -253,7 +244,9 @@ The Member Service introduces 11 new methods:
 10. updateMember: Updates a member.
 11. joinOrganizationWithExistingDetails: Joins an organization and applies existing member metadata to all members already associated with the user of the current term.
 
-These methods are used to create and delete members with the backend. This service's purpose is to interact with members in the backend. 
+These methods are used to create, retrieve, update, and delete members from the backend. This service's purpose is to interact with members in the backend. 
+
+#### Applicant Service
 
 The Applicant Service introduces 5 new methods:
 
@@ -263,17 +256,17 @@ The Applicant Service introduces 5 new methods:
 4. updateApplicant: Updates the status of the applicant (Accepted, Rejected, or Pending).
 5. removeApplicant: Deletes the applicant. 
 
-These methods are used to create, retrieve, update, and delete applicants with the backend. This service's purpose is to interact with applicants in the backend. 
+These methods are used to create, retrieve, update, and delete applicants from the backend. This service's purpose is to interact with applicants in the backend. 
 
 ## Backend Concerns
 
 For this feature, the backend focuses on relating users and organizations through members and applications. To properly understand the entirety of the backend functionality, we recommend starting from the top and moving down in alignment with this guide. We will start with the API layer, move down to the service layer that queries the database, and end with the entities that define the structure of our data in the persistent database. 
 
-### API Layer
+### 1) API Layer
 
-It is recommended that you review the code in `backend/api/members`, `backend/api/applicants`, and the Member Model in `backend/models/member`. Each of our API methods make use of the Organization Service, User Service, User Model, and Organization Model. It is also recommended to familiarize yourself with each of these files to have a better understanding of how the Member API calls make use of already-existing services and models. This is the first layer that is interacting with the frontend through the frontend services. Understanding this layer first is key to having a holistic understanding of the system. 
+It is recommended that you review the code in `backend/api/members`, `backend/api/applicants`, the Member Model in `backend/models/member`, and the Applicant Model in `backend/models/applicant`. Each of our API methods make use of the Organization Service, User Service, User Model, and Organization Model. It is also recommended to familiarize yourself with each of these files to have a better understanding of how the Member API calls make use of already-existing services and models. This is the first layer that is interacting with the frontend through the frontend services. Understanding this layer first is key to having a holistic understanding of the system. 
 
-#### In the `backend/api/members` file we created the following routes: 
+### Members API: In the `backend/api/members` file we created several routes:
 
 ```py3
 @api.get("/{slug}", response_model=list[MemberDetails], tags=["Members"])
@@ -282,26 +275,75 @@ def get_organization_members(
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
 ) -> list[MemberDetails]:
+
     organization = organization_service.get_by_slug(slug)
     return member_service.get_members_of_organization(organization)
 
-@api.post("/{slug}/create/{user_id}", response_model=MemberDetails, tags=["Members"])
+
+@api.get("/{slug}/{term}", response_model=list[MemberDetails], tags=["Members"])
+def get_organization_members_by_term(
+    slug: str,
+    term: str,
+    organization_service: OrganizationService = Depends(),
+    member_service: MemberService = Depends(),
+) -> list[MemberDetails]:
+
+    organization = organization_service.get_by_slug(slug)
+    return member_service.get_members_of_organization_by_term(organization, term)
+
+
+@api.get("/id/id/{id}", response_model=MemberDetails, tags=["Members"])
+def get_member_by_id(
+    id: int, member_service: MemberService = Depends()
+) -> MemberDetails:
+
+    return member_service.get_member_by_id(id)
+
+
+@api.get("/user/memberships/{user_id}", response_model=list[MemberDetails], tags=["Members"])
+def get_user_memberships(
+    user_id: int,
+    member_service: MemberService = Depends(),
+    user_service: UserService = Depends(),
+) -> list[MemberDetails]:
+
+    user = user_service.get_by_id(user_id)
+    return member_service.get_user_memberships(user)
+
+
+@api.get("/user/memberships/{user_id}/{term}", response_model=list[MemberDetails], tags=["Members"])
+def get_user_memberships_by_term(
+    user_id: int,
+    term: str,
+    member_service: MemberService = Depends(),
+    user_service: UserService = Depends(),
+) -> list[MemberDetails]:
+
+    user = user_service.get_by_id(user_id)
+    return member_service.get_user_memberships_by_term(user, term)
+
+
+@api.post("/{slug}/create/{user_id}/{term}", response_model=MemberDetails, tags=["Members"])
 def add_member(
     slug: str,
     user_id: int,
+    term: str,
     user_service: UserService = Depends(),
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
 ) -> MemberDetails:
+
     user = user_service.get_by_id(user_id)
     organization: Organization = organization_service.get_by_slug(slug)
 
-    return member_service.add_member(user, organization)
+    return member_service.add_member(user, organization, term)
 
-@api.delete("/{slug}/delete/{user_id}", response_model=None, tags=["Members"])
+
+@api.delete("/{slug}/delete/{user_id}/{term}", response_model=None, tags=["Members"])
 def remove_member(
     slug: str,
     user_id: int,
+    term: str,
     user_service: UserService = Depends(),
     organization_service: OrganizationService = Depends(),
     member_service: MemberService = Depends(),
@@ -309,16 +351,35 @@ def remove_member(
     user = user_service.get_by_id(user_id)
     organization: Organization = organization_service.get_by_slug(slug)
 
-    return member_service.remove_member(user, organization)
+    return member_service.remove_member(user, organization, term)
+
+
+@api.put("", responses={404: {"model": None}}, response_model=Member, tags=["Members"])
+def update_member(
+  member: Member,
+  member_service: MemberService = Depends()
+) -> Member:
+
+    return member_service.update_member(member)
 ```
 
 The `get_organization_members()` method takes in an organzation's slug as an argument. The slug is used to determine which organization we are grabbing the members of. 
 
-The `add_member()` method takes in an organization's slug and a user's id as arguments. These are used to pass user and organization models to the Member Service.
+The `get_organization_members_by_term()` method takes in an organization's slug and a term as arguments. The slug is used to determine the organization we are grabbing the members of while the term specifies which year and semester we are grabbing the members from.
 
-The `remove_member()` method takes in an organization's slug and a user's id as arguments.
+The `get_member_by_id()` method takes in a member's id as an argument. The unique id is used to specific exactly which member is being retrieved. 
 
-#### In the `backend/api/applicants` file we created the following routes: 
+The `get_user_memberships()` method takes in a user's id as an argument. This is used to grab the user we want to pass through to the member service. 
+
+The `get_user_memberships()` method takes in a user's id and a term as arguments. This is used to grab the user we want to pass through to the member service and the term specifies which year and semester we are grabbing the member from. 
+
+The `add_member()` method takes in an organization's slug, a user's id, and a term as arguments. These are used to pass user and organization models to the member service while specifying which term to add the member to.
+
+The `remove_member()` method takes in an organization's slug, a user's id, and a term as arguments. These are used to pass user and organization models to the member service while specifying which term to delete the member from.
+
+The `update_member()` method takes in a member model that is passed to the member service to be updated. 
+
+### Applicants API: In the `backend/api/applicants` file we created several routes:
 
 ```py3
 @api.get("/{slug}", response_model=list[ApplicantDetails], tags=["Applicants"])
@@ -371,12 +432,74 @@ def delete_applicant(
 ):
     applicant_service.remove_applicant_of_organization(subject, id)
 ```
-TODO: Briefly explain each method
 
-### TODO: Member Service
+The `get_organization_applicants()` method takes in an organzation's slug as an argument. The slug is used to determine which organization we are grabbing the members of. 
 
-### TODO: Applicant Service
+The `get_applicant_by_id()` method takes in an applicant's id as an argument. The unique id is used to specific exactly which applicant is being retrieved. 
 
-### TODO: Models
+The `new_applicant()` method takes in an organization's slug, a user model, and an applicant model. These are used to pass applicant, user, and organization models to the member service.
 
-### TODO: Entities
+The `update_applicant()` method takes in an id and an applicant model as arguments. 
+
+The `delete_applicant()` method takes in an applicant's id and a user model as arguments. These are used to pass user and applicant models to the member service.
+
+### 2) Member and Applicant Service
+
+While reading through the previous section, you should have noticed that each of the API methods either returns a method call, or ends in a method call from the respective service. Aside from the `get_current_term()` method in the `backend/services/member` file, every method written in the member and applicant service corresponds to the similarly named API call. The service uses a SQLAlchemy Session to query and alter the database based on what was passed through to us in the API methods. Each service method creates a SQLAlchemy Entity by querying the database using what was given to us from the API's arguments, uses this entity to interact with the database, then turns the entity back into a Pydantic Model (if applicable) so the rest of the backend can use it. Aside from the small paragraph below, there isn't anything that separates about our services from the rest of the codebase that you need to know to effectively extend or improve our feature. 
+
+One important aspect of our feature that you may be asking yourself questions about is how we deal with the term, and more specifically, how we grab the current term. Each instance of a member is associated with a term, and every time we create a new member or update an existing member, the desired outcome is to ensure the member is associated with whatever term it is in real time. The `get_current_term()` method in `backend/services/member` uses the Python Datetime Module to grab the current term from real time. Using the return value of this method, we can ensure that members from previous terms remain unchanged.
+
+### 3) Models
+
+We added four new models to implement our feature which are the Member, MemberDetails, Applicant, and ApplicantDetails models. While we briefly discuss these models below it is important to review the Organization and User models, as they are frequently used throughout our feature's code, and the rest of the codebase.
+
+#### Member and MemberDetails
+```py3
+class Member(BaseModel):
+    id: int | None = None
+    user_id: int | None = None
+    organization_id: int | None = None
+    term: str
+    year: str | None = None
+    description: str | None = None
+    isLeader: bool
+    position: str | None = "Member"
+    major: str | None = None
+    minor: str | None = None
+
+class MemberDetails(Member):
+    user: User
+    organization: Organization
+```
+
+The Member model above follows the same format and use of most other models seen throughout the codebase. In particular, we make use of a MemberDetails model that inherits from the Member model to store a User and Organization model that corresponds to the given Member model. We want to have direct access to these because rather than querying the database using the user's and organization's id, we can store an instance of them knowing we will use their attributes throughout the frontend and backend. Instead of storing these models directly in the Member model, we move them to a details model to prevent circular imports in the MemberEntity.
+
+#### Applicant and ApplicantDetails
+```py3
+class ApplicantStatus(Enum):
+    PENDING = 0
+    ACCEPTED = 1
+    REJECTED = -1
+
+class Applicant(BaseModel):
+    id: int
+    user_id: int | None = None
+    organization_id: int | None = None
+    status: ApplicantStatus
+    name: str
+    email: str
+    major: str
+    minor: str | None = None
+    year: str
+    pronouns: str
+    interest: str
+
+class ApplicantDetails(Applicant):
+    user: User
+    organization: Organization
+```
+
+The reasoning for the Applicant and ApplicantDetails models is exactly the same as what you read above. One thing to notice is the ApplicantStatus enumeration. This is used in both the backend and frontend to indicate whether the application is pending, accepted, or rejected. Nothing special is being done here, but it is a difference worth noting from the Member model above.
+
+
+### 4) TODO: Entities
