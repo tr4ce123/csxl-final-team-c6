@@ -116,12 +116,9 @@ export class OrganizationRosterComponent {
 
   checkMembership() {
     this.memberService
-      .getMembersByTerm(this.organization?.slug!, this.selectedTerm)
-      .subscribe((members) => {
-        this.isLeader = members.some(
-          (member) =>
-            member.user_id == this.profile?.id && member.isLeader == true
-        );
+      .getMembersByOrgAndUser(this.organization?.slug!, this.profile?.id!)
+      .subscribe((member) => {
+        this.isLeader = member.isLeader;
       });
   }
 

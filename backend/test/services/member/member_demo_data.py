@@ -1,8 +1,12 @@
 from ....entities.member_entity import MemberEntity
 import pytest
 from sqlalchemy.orm import Session
-from ..user_data import user, ambassador, leader, mark, tammy, vicky, morgan
-from ..organization.organization_demo_data import cads, cssg, acm
+from ..user_data import ambassador, leader, mark, tammy, vicky, morgan
+from ..organization.organization_demo_data import (
+    acm,
+    cads,
+    cssg,
+)
 from ..reset_table_id_seq import reset_table_id_seq
 
 larry_cads = MemberEntity(
@@ -134,7 +138,6 @@ mark_cads_F2023 = MemberEntity(
     major="Computer Science",
     minor="Data Science",
 )
-
 
 members = [
     larry_cads,

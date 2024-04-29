@@ -78,6 +78,16 @@ export class MemberService {
     return this.http.get<Member[]>('/api/members/' + slug + '/' + term);
   }
 
+  /** Get the member model of the given organization and user
+   *
+   * @param slug
+   * @param user_id
+   * @returns {Observable<Member>}
+   */
+  getMembersByOrgAndUser(slug: string, user_id: number): Observable<Member> {
+    return this.http.get<Member>('/api/members/' + slug + '/user/' + user_id);
+  }
+
   /** Get all member entries associated with a user from the backend database table using the backend HTTP get request.
    * @returns {Observable<Member[]>}
    */

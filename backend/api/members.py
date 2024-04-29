@@ -64,6 +64,29 @@ def get_organization_members_by_term(
     return member_service.get_members_of_organization_by_term(organization, term)
 
 
+@api.get("/{slug}/user/{user_id}", response_model=MemberDetails, tags=["Members"])
+def get_member_by_user_and_org(
+    slug: str,
+    user_id: int,
+    organization_service: OrganizationService = Depends(),
+    user_service: UserService = Depends(),
+    member_service: MemberService = Depends(),
+) -> MemberDetails:
+    """
+    Get a member by a user id and organization
+
+    Args:
+        slug: the slug of the organization
+        user_id: the id of the user we are querying
+
+    Returns:
+        MemberDetails: MemberDetails object of the member
+    """
+    organization = organization_service.get_by_slug(slug)
+    subject = user_service.get_by_id(user_id)
+    return member_service.get_member_by_user_and_org(subject, organization)
+
+
 @api.get("/id/id/{id}", response_model=MemberDetails, tags=["Members"])
 def get_member_by_id(
     id: int, member_service: MemberService = Depends()
@@ -80,6 +103,7 @@ def get_member_by_id(
     """
 
     return member_service.get_member_by_id(id)
+
 
 @api.get(
     "/user/memberships/{user_id}", response_model=list[MemberDetails], tags=["Members"]
@@ -104,8 +128,11 @@ def get_user_memberships(
     user = user_service.get_by_id(user_id)
     return member_service.get_user_memberships(user)
 
+
 @api.get(
-    "/user/memberships/{user_id}/{term}", response_model=list[MemberDetails], tags=["Members"]
+    "/user/memberships/{user_id}/{term}",
+    response_model=list[MemberDetails],
+    tags=["Members"],
 )
 def get_user_memberships_by_term(
     user_id: int,
@@ -129,7 +156,10 @@ def get_user_memberships_by_term(
     user = user_service.get_by_id(user_id)
     return member_service.get_user_memberships_by_term(user, term)
 
-@api.post("/{slug}/create/{user_id}/{term}", response_model=MemberDetails, tags=["Members"])
+
+@api.post(
+    "/{slug}/create/{user_id}/{term}", response_model=MemberDetails, tags=["Members"]
+)
 def add_member(
     slug: str,
     user_id: int,

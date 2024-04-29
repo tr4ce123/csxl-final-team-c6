@@ -107,15 +107,10 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
 
   checkMembership() {
     this.memberService
-      .getMembersByTerm(this.organization?.slug!, this.selectedTerm)
-      .subscribe((members) => {
-        this.isMember = members.some(
-          (member) => member.user_id == this.profile?.id
-        );
-        this.isLeader = members.some(
-          (member) =>
-            member.user_id == this.profile?.id && member.isLeader == true
-        );
+      .getMembersByOrgAndUser(this.organization?.slug!, this.profile?.id!)
+      .subscribe((member) => {
+        this.isMember = true;
+        this.isLeader = member.isLeader;
       });
   }
 
@@ -179,4 +174,7 @@ export class OrganizationDetailsInfoCard implements OnInit, OnDestroy {
   viewPendingApplications() {
     this.router.navigate(['applicants'], { relativeTo: this.route });
   }
+}
+function subscribe(arg0: (member: any) => void) {
+  throw new Error('Function not implemented.');
 }
