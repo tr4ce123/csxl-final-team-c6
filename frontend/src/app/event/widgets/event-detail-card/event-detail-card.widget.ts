@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 import { PermissionService } from 'src/app/permission.service';
 import { Profile } from 'src/app/models.module';
 import { Router } from '@angular/router';
+import { MemberService } from 'src/app/organization/member.service';
 
 @Component({
   selector: 'event-detail-card',
@@ -26,13 +27,16 @@ export class EventDetailCard implements OnInit {
   @Input() event!: Event;
   @Input() profile!: Profile;
   adminPermission$!: Observable<boolean>;
+  isMember: boolean = false;
+  showCard: boolean = true;
 
   /** Constructs the widget */
   constructor(
     protected snackBar: MatSnackBar,
     protected eventService: EventService,
     private permission: PermissionService,
-    private router: Router
+    private router: Router,
+    private memberService: MemberService
   ) {}
 
   ngOnInit() {
@@ -40,6 +44,7 @@ export class EventDetailCard implements OnInit {
       'organization.events.*',
       `organization/${this.event.organization_id!}`
     );
+    this.checkMembership();
   }
 
   /** Handler for when the share button is pressed
@@ -129,5 +134,28 @@ export class EventDetailCard implements OnInit {
     this.snackBar.open('Error: Event Not Registered For', '', {
       duration: 2000
     });
+  }
+
+  checkMembership() {
+    if (this.event.members_only) {
+      this.memberService
+        .getMembersByOrgAndUser(
+          this.event.organization?.slug!,
+          this.profile.id!
+        )
+        .subscribe({
+          next: (member) => {
+            this.isMember = !!member;
+            this.showCard = this.isMember;
+          },
+          error: (error) => {
+            console.error('Error checking membership', error);
+            this.isMember = false;
+            this.showCard = false;
+          }
+        });
+    } else {
+      this.showCard = true;
+    }
   }
 }

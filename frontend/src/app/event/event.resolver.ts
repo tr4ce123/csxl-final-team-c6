@@ -36,6 +36,7 @@ export const eventDetailResolver: ResolveFn<Event | undefined> = (
       organization_id: null,
       organization: null,
       registration_count: 0,
+      members_only: false,
       is_attendee: false,
       is_organizer: false,
       organizers: []

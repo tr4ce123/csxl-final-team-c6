@@ -22,12 +22,14 @@ import { Profile } from '/workspace/frontend/src/app/profile/profile.service';
 import {
   organizationDetailResolver,
   organizationEventsResolver,
+  organizationMemberOnlyEventsResolver,
   organizationMembersResolver
 } from '../organization.resolver';
 import { EventService } from 'src/app/event/event.service';
 import { Event } from 'src/app/event/event.model';
 import { Observable } from 'rxjs';
 import { PermissionService } from 'src/app/permission.service';
+import { MemberService } from '../member.service';
 
 /** Injects the organization's name to adjust the title. */
 let titleResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
@@ -48,7 +50,8 @@ export class OrganizationDetailsComponent {
       profile: profileResolver,
       organization: organizationDetailResolver,
       events: organizationEventsResolver,
-      members: organizationMembersResolver
+      members: organizationMembersResolver,
+      memberOnlyEvents: organizationMemberOnlyEventsResolver
     },
     children: [
       {
@@ -68,11 +71,15 @@ export class OrganizationDetailsComponent {
   /** Store a map of days to a list of events for that day */
   public eventsPerDay: [string, Event[]][];
 
+  public memberOnlyEventsPerDay: [string, Event[]][];
+
   /** Whether or not the user has permission to update events. */
   public eventCreationPermission$: Observable<boolean>;
 
   /** The leaders of the organization to show */
   public leaders: Member[];
+
+  public isMember: boolean = false;
 
   /** Constructs the Organization Detail component */
   constructor(
@@ -80,23 +87,29 @@ export class OrganizationDetailsComponent {
     protected snackBar: MatSnackBar,
     protected eventService: EventService,
     private permission: PermissionService,
-    protected router: Router
+    protected router: Router,
+    protected memberService: MemberService
   ) {
     /** Initialize data from resolvers. */
     const data = this.route.snapshot.data as {
       profile: Profile;
       organization: Organization;
       events: Event[];
+      memberOnlyEvents: Event[];
       members: Member[];
     };
     this.profile = data.profile;
     this.organization = data.organization;
     this.eventsPerDay = eventService.groupEventsByDate(data.events ?? []);
+    this.memberOnlyEventsPerDay = eventService.groupEventsByDate(
+      data.memberOnlyEvents ?? []
+    );
     this.eventCreationPermission$ = this.permission.check(
       'organization.events.*',
       `organization/${this.organization?.id ?? -1}`
     );
     this.leaders = this.getLeadersFromAllMembers(data.members);
+    this.checkMembership();
   }
 
   private getLeadersFromAllMembers(members: Member[]): Member[] {
@@ -124,5 +137,13 @@ export class OrganizationDetailsComponent {
     });
 
     return leaders;
+  }
+
+  checkMembership() {
+    this.memberService
+      .getMembersByOrgAndUser(this.organization?.slug!, this.profile?.id!)
+      .subscribe(() => {
+        this.isMember = true;
+      });
   }
 }

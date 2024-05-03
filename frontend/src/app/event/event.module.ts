@@ -28,6 +28,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 /* UI Widgets */
 import { RouterModule } from '@angular/router';
@@ -65,6 +66,7 @@ import { EventUsersList } from './widgets/event-users-list/event-users-list.widg
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     RouterModule,
     SharedModule,

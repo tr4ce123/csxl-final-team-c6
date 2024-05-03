@@ -121,6 +121,28 @@ def get_events_in_time_range(
 
     return event_service.get_events_in_time_range(time_range, subject)
 
+@api.get("/organization/members/{slug}", response_model=list[EventDetails], tags=["Events"])
+def get_members_only_events_by_org(
+    slug: str,
+    subject: User = Depends(registered_user),
+    event_service: EventService = Depends(),
+    organization_service: OrganizationService = Depends()
+) -> list[EventDetails]:
+    """
+    Get all member only events from an organization
+
+    Args:
+        slug: a valid str representing a unique Organization
+        subject: a vliad User model representing the currently logged in User
+        event_service: a valid EventService
+        orgnaization_service: a valid OrganizationService
+
+    Returns:
+        list[EventDetails]: All EventDetails in the Event database table from a specific organization that are marked as members only
+    """
+    organization = organization_service.get_by_slug(slug)
+    return event_service.get_members_only_events_by_org(organization, subject)
+
 
 @api.get("/organization/{slug}", response_model=list[EventDetails], tags=["Events"])
 def get_events_by_organization(

@@ -9,6 +9,7 @@ from sqlalchemy import func, select, and_, func, or_, exists, or_
 from sqlalchemy.orm import Session, aliased
 from backend.entities.user_entity import UserEntity
 from backend.models.event_registration import EventRegistration
+from backend.models.organization import Organization
 from ..models.public_user import PublicUser
 from backend.models.organization_details import OrganizationDetails
 from backend.models.pagination import Paginated, PaginationParams
@@ -73,6 +74,11 @@ class EventService:
 
         statement = select(EventEntity)
         length_statement = select(func.count()).select_from(EventEntity)
+
+        members_only_filter = EventEntity.members_only == False
+        statement = statement.where(members_only_filter)
+        length_statement = length_statement.where(members_only_filter)
+
         if pagination_params.range_start != "":
             range_start = pagination_params.range_start
             range_end = pagination_params.range_end
@@ -165,6 +171,25 @@ class EventService:
 
         return [entity.to_details_model(subject) for entity in event_entities]
 
+    def get_members_only_events_by_org(self, organization: OrganizationDetails, subject: User | None = None) -> list[EventDetails]:
+        """
+        Get members only events
+
+        Args:
+            organization: a valid organization model representing the organization the events are associated with
+            subject: The User making the request.
+
+        Returns: 
+            list[EventDetails]: list of valid EventDetails models that are marked as members only 
+        """
+        event_entities = (
+            self._session.query(EventEntity)
+            .where(EventEntity.organization_id == organization.id)
+            .all()
+        )
+
+        return [entity.to_details_model(subject) for entity in event_entities]
+
     def create(self, subject: User, event: DraftEvent) -> EventDetails:
         """
         Creates a event based on the input object and adds it to the table.
@@ -250,6 +275,7 @@ class EventService:
         events = (
             self._session.query(EventEntity)
             .filter(EventEntity.organization_id == organization.id)
+            .filter(EventEntity.members_only == False)
             .all()
         )
 
@@ -292,6 +318,7 @@ class EventService:
         event_entity.location = event.location
         event_entity.public = event.public
         event_entity.registration_limit = event.registration_limit
+        event_entity.members_only = event.members_only
 
         # If attempting to edit organizers, enforce registration management permissions
         if event.organizers != event_details.organizers:

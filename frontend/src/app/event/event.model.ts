@@ -23,6 +23,7 @@ export interface Event {
   organization_id: number | null;
   organization: Organization | null;
   registration_count: number;
+  members_only: boolean;
   is_attendee: boolean;
   is_organizer: boolean;
   organizers: PublicProfile[];
@@ -44,6 +45,7 @@ export interface EventJson {
   organization_id: number | null;
   organization: Organization | null;
   registration_count: number;
+  members_only: boolean;
   is_attendee: boolean;
   is_organizer: boolean;
   organizers: PublicProfile[];

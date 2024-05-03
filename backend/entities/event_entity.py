@@ -38,6 +38,8 @@ class EventEntity(EntityBase):
     public: Mapped[bool] = mapped_column(Boolean)
     # Maximim number of people who can register for the event
     registration_limit: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    # Is the event a members only event
+    members_only: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Organization hosting the event
     # NOTE: This defines a one-to-many relationship between the organization and events tables.
@@ -67,6 +69,7 @@ class EventEntity(EntityBase):
             description=model.description,
             public=model.public,
             registration_limit=model.registration_limit,
+            members_only=model.members_only,
             organization_id=model.organization_id,
         )
 
@@ -88,6 +91,7 @@ class EventEntity(EntityBase):
             description=model.description,
             public=model.public,
             registration_limit=model.registration_limit,
+            members_only=model.members_only,
             organization_id=model.organization_id,
         )
 
@@ -133,6 +137,7 @@ class EventEntity(EntityBase):
             registration_limit=self.registration_limit,
             organization_id=self.organization_id,
             registration_count=len(attendees),
+            members_only=self.members_only,
             is_attendee=is_attendee,
             is_organizer=is_organizer,
             organizers=organizers,
@@ -156,6 +161,7 @@ class EventEntity(EntityBase):
             public=self.public,
             registration_limit=self.registration_limit,
             registration_count=event.registration_count,
+            members_only=self.members_only,
             organization_id=self.organization_id,
             organization=self.organization.to_model(),
             is_attendee=event.is_attendee,

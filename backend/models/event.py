@@ -22,6 +22,7 @@ class DraftEvent(BaseModel):
     description: str
     public: bool
     registration_limit: int
+    members_only: bool = False
     organization_id: int
     organizers: list[PublicUser] = []
 

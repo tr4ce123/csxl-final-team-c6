@@ -103,7 +103,17 @@ event_six = EventEntity(
     organization_id=cads.id,
 )
 
-events = [event_one, event_two, event_three, event_four, event_five, event_six]
+event_seven = EventEntity(
+    name="Angular Workshop",
+    time=date_maker(days_in_future=-15, hour=19, minutes=0),
+    location="FB 009",
+    description="If you are interested in learning the basics of Angular, come out to learn!",
+    public=True,
+    organization_id=cads.id,
+    members_only=True
+)
+
+events = [event_one, event_two, event_three, event_four, event_five, event_six, event_seven]
 
 # Data Functions
 

@@ -104,6 +104,16 @@ export class EventService {
     }
   }
 
+  /** Returns the event object from the backend database table using the backend HTTP get request.
+   * @param slug: Slug of the organization to retrieve
+   * @returns {Observable<Event[]>}
+   */
+  getMembersOnlyEventsByOrganization(slug: string): Observable<Event[]> {
+    return this.http
+      .get<EventJson[]>('/api/events/organization/members/' + slug)
+      .pipe(map((eventJsons) => eventJsons.map(parseEventJson)));
+  }
+
   /** Returns the new event object from the backend database table using the backend HTTP get request.
    * @param event: model of the event to be created
    * @returns {Observable<Event>}

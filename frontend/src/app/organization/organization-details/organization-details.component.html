@@ -48,7 +48,17 @@
     </mat-card-actions>
   </mat-card>
 
-  <div class="event-listing-container">
+  <div *ngIf="isMember" class="event-listing-container">
+    <event-list
+      [eventsPerDay]="memberOnlyEventsPerDay"
+      [organization]="organization"
+      [selectedEvent]="null"
+      [disableLinks]="false"
+      [showHeader]="true"
+      [showCreateButton]="(eventCreationPermission$ | async)!" />
+  </div>
+
+  <div *ngIf="!isMember" class="event-listing-container">
     <event-list
       [eventsPerDay]="eventsPerDay"
       [organization]="organization"

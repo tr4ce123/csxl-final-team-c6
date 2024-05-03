@@ -16,3 +16,9 @@
 mat-card-content {
   margin-top: 8px;
 }
+
+.mat-form-field-wrapper {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}

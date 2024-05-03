@@ -97,3 +97,11 @@ export const organizationMemberDetailResolver: ResolveFn<Member | undefined> = (
       })
     );
 };
+
+export const organizationMemberOnlyEventsResolver: ResolveFn<
+  Event[] | undefined
+> = (route, state) => {
+  return inject(EventService).getMembersOnlyEventsByOrganization(
+    route.paramMap.get('slug')!
+  );
+};

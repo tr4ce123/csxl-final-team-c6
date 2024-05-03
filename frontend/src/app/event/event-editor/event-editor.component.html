@@ -43,11 +43,17 @@
                     formControlName="registration_limit" name="registration_limit" />
             </mat-form-field>
 
-      <!-- User Selection / Organizers Form Control -->
-      <user-lookup
-        label="Organizers"
-        [users]="organizers"
-        [disabled]="(enabled$ | async) === false"></user-lookup>
+            <!-- User Selection / Organizers Form Control -->
+            <user-lookup
+            label="Organizers"
+            [users]="organizers"
+            [disabled]="(enabled$ | async) === false"></user-lookup>
+
+            <!-- Members Only Event Toggle -->
+            <div class="mat-form-field-wrapper">
+                <mat-slide-toggle formControlName="members_only" name="members_only">Members Only Event</mat-slide-toggle>
+            </div>            
+            
     </mat-card-content>
 
         <!-- Cancel and Save Buttons -->

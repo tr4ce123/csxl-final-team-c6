@@ -66,6 +66,7 @@ export class EventEditorComponent {
     Validators.required,
     Validators.min(0)
   ]);
+  members_only = new FormControl(false, [Validators.required]);
 
   /** Create a form group */
   public eventForm = this.formBuilder.group({
@@ -75,6 +76,7 @@ export class EventEditorComponent {
     description: this.description,
     public: this.public.value! == 'true',
     registration_limit: this.registration_limit,
+    members_only: this.members_only,
     userLookup: ''
   });
 
@@ -113,6 +115,7 @@ export class EventEditorComponent {
       description: this.event.description,
       public: this.event.public,
       registration_limit: this.event.registration_limit,
+      members_only: this.members_only.value,
       userLookup: ''
     });
 

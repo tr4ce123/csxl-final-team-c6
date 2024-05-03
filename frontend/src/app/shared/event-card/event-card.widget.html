@@ -8,7 +8,8 @@
   <!-- Inner Columns -->
   <div class="inner-column">
     <div class="header-section">
-      <p class="event-name">{{ event.name }}</p>
+      <p *ngIf="event.members_only" class="event-name">(Members Only) {{ event.name }}</p>
+      <p *ngIf="!event.members_only" class="event-name"> {{ event.name }}</p>
       <p class="event-date">
         {{ event.time | date: 'shortTime' }}
       </p>
