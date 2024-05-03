@@ -15,7 +15,9 @@ This document contains the technical specifications, this feature adds new API r
   - [API Routes](#api-routes)
 - [Underlying Database/Entity-Level Representation Decisions](#underlying-databaseentity-level-representation-decisions)
 - [Technical and User Experience Design Choice](#technical-and-user-experience-design-choice)
-- [Development Concerns](#development-concerns)
+- [Future Developers](#future-developers)
+  - [Frontend Concerns](#frontend-concerns)
+  - [Backend Concerns](#backend-concerns)
 
 
 # Descriptions and Sample Data Representation of feature
@@ -200,7 +202,7 @@ The setup of the `applicant` table is very similar to that of the `member` table
 
 **Decision Made and Reasoning:** Initially, we chose textual representations due to their clarity. However, during internal use, we favored the aesthetically pleasing color icons. As time progressed, we grew attached to the color icons and looked for alternative methods. We came to the decision to merge the two approaches. Taking inspiration from the descriptions on the organization cards, we changed the icons so that colors are displayed, but hovering over the icons shows the original, textual representation. We think that this is a good middleground. It maintains the slick and clean work of the website without cluttering the organization cards. We believe the hover-over feature to adequately address any confusions, as users uncertain about the colors will likely seek out the text explanation. This hybrid approach effectively balances beauty with functionailty, offering the best of both worlds.
 
-# Development concerns
+# Future Developers
 
 Development concerns: This section is designed for new developers interested in making future changes to enhance and expand our features. This guide will be split into two sections: Frontend Concerns and Backend Concerns. We want to separate the concerns of the API and backend service layer with the frontend services and Angular layer. If you want to focus on the backend, you should focus on the Backend section, but still familiarize yourself with the major aspects of the Frontend section. Similarly, if you want to focus on the frontend, focus on the Frontend section while familiarizing yourself with the major aspects of the Backend section. Since the two sections are inherently tied to each other, it's important to be familiarized with the overarching aspects of both regardless of your focus. Having a holistic approach to understanding how our features are implemented will be the most effective way of developing more effectively. 
 
