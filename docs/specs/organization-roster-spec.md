@@ -506,4 +506,124 @@ class ApplicantDetails(Applicant):
 The reasoning for the Applicant and ApplicantDetails models is exactly the same as what you read above. One thing to notice is the ApplicantStatus enumeration. This is used in both the backend and frontend to indicate whether the application is pending, accepted, or rejected. Nothing special is being done here, but it is a difference worth noting from the Member model above.
 
 
-### 4) TODO: Entities
+### 4) Entities 
+
+While reading through this section of the document it is advised to familiarize yourself with the `backend/entities/member_entity` and `backend/entities/applicant_entity` files. While we won't go over SQLAlchemy Entities in detail here, refer to the `backend/docs/sqlalchemy` files to understand the basics of how they are used throughout the codebase. 
+
+#### Member Entity
+
+After reading the documentation on SQLAlchemy Entities, you will notice that we set the Member Entity up to act as an association table between Users and Organizations. This is because Users and Organizations have a many-to-many relationship where a user can be a part of many organizations while an organization has many members (users) associated with it. 
+
+```py3
+user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
+user: Mapped["UserEntity"] = relationship(back_populates="members")
+
+organization_id: Mapped[int] = mapped_column(ForeignKey("organization.id"), primary_key=True)
+organization: Mapped["OrganizationEntity"] = relationship(back_populates="members")
+```
+
+The code above is what defines our many-to-many relationship. 
+
+Instead of the Member Entity being a simple association table, we also wanted members to have specific attributes that aren't found anywhere else in the codebase. This is why you'll see us declare other fields such as "year", "description", "major", etc. 
+
+```py3
+def to_model(self) -> Member:
+        return Member(
+            id=self.id,
+            user_id=self.user_id,
+            organization_id=self.organization_id,
+            term=self.term,
+            year=self.year,
+            description=self.description,
+            isLeader=self.isLeader,
+            position=self.position,
+            major=self.major,
+            minor=self.minor,
+        )
+
+    def to_details_model(self) -> MemberDetails:
+        return MemberDetails(
+            id=self.id,
+            user_id=self.user_id,
+            organization_id=self.organization_id,
+            year=self.year,
+            term=self.term,
+            description=self.description,
+            isLeader=self.isLeader,
+            position=self.position,
+            major=self.major,
+            minor=self.minor,
+            user=self.user.to_model(),
+            organization=self.organization.to_model(),
+        )
+
+    @classmethod
+    def from_model(cls, model: Member) -> Self:
+        return cls(
+            id=model.id,
+            user_id=model.user_id,
+            organization_id=model.organization_id,
+            term=model.term,
+            year=model.year,
+            description=model.description,
+            isLeader=model.isLeader,
+            position=model.position,
+            major=model.major,
+            minor=model.minor,
+        )
+```
+
+You'll also notice that we define class methods that allow us to translate our Member Entities into Member Pydantic Models. We included `to_details_model()` function because we want direct access to the User and Organization Models that are associated with the Member in both the frontend and backed. This choice allows us to access all of the associated user's and organization's attributes directly rather than writing excessive calls in the frontend. 
+
+#### Applicant Entity
+
+Similarly, the Applicant Entity acts as an association table between Users and Organizations. We chose to make an entity for the applications because we want to store the application until the leaders of an organization decide to run through an accept them. We also want to display an application's status to the user that submitted it and have them persist beyond acceptance or rejection.
+
+```py3
+user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+user: Mapped["UserEntity"] = relationship(back_populates="applicants")
+
+organization_id: Mapped[int] = mapped_column(ForeignKey("organization.id"))
+organization: Mapped["OrganizationEntity"] = relationship(back_populates="applicants")
+```
+
+The code above is what defines our many-to-many relationship. 
+
+Again, despite the fact that the Applicant Entity serves as an association table, we want to store information that the user puts into the application to display to the leaders on a separate page. 
+
+```py3
+def to_model(self) -> ApplicantDetails:
+        return ApplicantDetails(
+            id=self.id,
+            user_id=self.user_id,
+            organization_id=self.organization_id,
+            status=self.status,
+            name=self.name,
+            email=self.email,
+            major=self.major,
+            minor=self.minor,
+            year=self.year,
+            pronouns=self.pronouns,
+            interest=self.interest,
+            user=self.user.to_model(),
+            organization=self.organization.to_model(),
+        )
+
+    @classmethod
+    def from_model(cls, model: Applicant) -> Self:
+        return cls(
+            id=model.id,
+            user_id=model.user_id,
+            organization_id=model.organization_id,
+            status=model.status,
+            name=model.name,
+            email=model.email,
+            major=model.major,
+            minor=model.minor,
+            year=model.year,
+            pronouns=model.pronouns,
+            interest=model.interest,
+        )
+```
+
+Seen in the code snippet above, we chose to not write a separate to details model function because we aren't using an Applicant without it being in the form of the ApplicantDetails.
