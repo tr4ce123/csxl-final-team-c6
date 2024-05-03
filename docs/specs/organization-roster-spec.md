@@ -22,7 +22,7 @@ This document contains the technical specifications, this feature adds new API r
 
 # Descriptions and Sample Data Representation of feature
 
-We have added/modified the following models/Api Routes (current stories done)
+We have added/modified the following models/Api Routes
 
 ## 0. Organization Type
 Before:
@@ -238,30 +238,33 @@ The two services we introduced are the Member Service and the Applicant Service 
 
 #### Member Service
 
-The Member Service introduces 11 new methods:
+The Member Service introduces 12 new methods:
 
 1. getCurrentTerm: Static method that retrieves the current term.
+2. getTerms: Static method that retrieves terms from the last two years.
 3. getMembers: Retrieves all members of an organization.
 4. getMemberById: Retrieves a single member.
 5. getMembersByTerm: Retrieves all members of an organization based on a provided term.
-6. getUserMemberships: Retrieves all members associated with a user.
-7. getUserMembershipsByTerm: Retrieves all members associated with a user based on a provided term.
-8. addMember: Creates a new member, giving a user membership of an organization.
-9. deleteMember: Deletes a member, revokes a user's membership of an organization.
-10. updateMember: Updates a member.
-11. joinOrganizationWithExistingDetails: Joins an organization and applies existing member metadata to all members already associated with the user of the current term.
+6. getMembersByOrgAndUser: Retrieves a single member associated with an organization and a user.
+7. getUserMemberships: Retrieves all members associated with a user.
+8. getUserMembershipsByTerm: Retrieves all members associated with a user based on a provided term.
+9. addMember: Creates a new member, giving a user membership of an organization.
+10. deleteMember: Deletes a member, revokes a user's membership of an organization.
+11. updateMember: Updates a member.
+12. joinOrganizationWithExistingDetails: Joins an organization and applies existing member metadata to all members already associated with the user of the current term.
 
 These methods are used to create, retrieve, update, and delete members from the backend. This service's purpose is to interact with members in the backend. 
 
 #### Applicant Service
 
-The Applicant Service introduces 5 new methods:
+The Applicant Service introduces 6 new methods:
 
 1. getApplicants: Retrieves all applicants of an organization.
 2. getApplicant: Retrieves a single applicant.
-3. createApplicant: Creates an applicant when an application is submitted.
-4. updateApplicant: Updates the status of the applicant (Accepted, Rejected, or Pending).
-5. removeApplicant: Deletes the applicant. 
+3. getUserApplications: Retrieves all applications a user has submitted.
+4. createApplicant: Creates an applicant when an application is submitted.
+5. updateApplicant: Updates the status of the applicant (Accepted, Rejected, or Pending).
+6. removeApplicant: Deletes the applicant. 
 
 These methods are used to create, retrieve, update, and delete applicants from the backend. This service's purpose is to interact with applicants in the backend. 
 
@@ -297,6 +300,20 @@ def get_organization_members_by_term(
 
     organization = organization_service.get_by_slug(slug)
     return member_service.get_members_of_organization_by_term(organization, term)
+
+
+@api.get("/{slug}/user/{user_id}", response_model=MemberDetails, tags=["Members"])
+def get_member_by_user_and_org(
+    slug: str,
+    user_id: int,
+    organization_service: OrganizationService = Depends(),
+    user_service: UserService = Depends(),
+    member_service: MemberService = Depends(),
+) -> MemberDetails:
+
+    organization = organization_service.get_by_slug(slug)
+    subject = user_service.get_by_id(user_id)
+    return member_service.get_member_by_user_and_org(subject, organization)
 
 
 @api.get("/id/id/{id}", response_model=MemberDetails, tags=["Members"])
@@ -374,7 +391,9 @@ The `get_organization_members()` method takes in an organzation's slug as an arg
 
 The `get_organization_members_by_term()` method takes in an organization's slug and a term as arguments. The slug is used to determine the organization we are grabbing the members of while the term specifies which year and semester we are grabbing the members from.
 
-The `get_member_by_id()` method takes in a member's id as an argument. The unique id is used to specific exactly which member is being retrieved. 
+The `get_member_by_user_and_org()` method takes in an organization's slug and a user's id as arguments. As you will see below we also have a method that gets the user memberships as a list. Here, we wanted to create a version that only grabs a single member to check if the user is already a member of an organization. Rather than having to go through an entire list, we can just check if any instance exists, and do the according functionality in the frontend.
+
+The `get_member_by_id()` method takes in a member's id as an argument. The unique id is used to specific exactly which member is being retrieved. This method is primarily used for the Edit Member Component in the frontend to update members because the id will appear in the URL where we will be able to grab it and pass through an HTTP Request in the frontend.
 
 The `get_user_memberships()` method takes in a user's id as an argument. This is used to grab the user we want to pass through to the member service. 
 
@@ -407,6 +426,17 @@ def get_organization_applicants_by_id(
 ) -> ApplicantDetails:
 
     return application_service.get_applicant_by_id(id)
+
+
+@api.get("/applications/{user_id}", response_model=list[ApplicantDetails], tags=["Applicants"])
+def get_user_applications(
+    user_id: int,
+    application_service: ApplicantService = Depends(),
+    user_service: UserService = Depends()
+) -> list[ApplicantDetails]:
+
+    user = user_service.get_by_id(user_id)
+    return application_service.get_user_applications(user)
 
 
 @api.post("/{slug}", response_model=ApplicantDetails, tags=["Applicants"])
@@ -444,6 +474,8 @@ The `get_organization_applicants()` method takes in an organzation's slug as an 
 
 The `get_applicant_by_id()` method takes in an applicant's id as an argument. The unique id is used to specific exactly which applicant is being retrieved. 
 
+The `get_user_applications()` method takes in a user's id as an argument which is used to identify the user we want the applications of.
+
 The `new_applicant()` method takes in an organization's slug, a user model, and an applicant model. These are used to pass applicant, user, and organization models to the member service.
 
 The `update_applicant()` method takes in an id and an applicant model as arguments. 
@@ -452,9 +484,11 @@ The `delete_applicant()` method takes in an applicant's id and a user model as a
 
 ### 2) Member and Applicant Service
 
-While reading through the previous section, you should have noticed that each of the API methods either returns a method call, or ends in a method call from the respective service. Aside from the `get_current_term()` method in the `backend/services/member` file, every method written in the member and applicant service corresponds to the similarly named API call. The service uses a SQLAlchemy Session to query and alter the database based on what was passed through to us in the API methods. Each service method creates a SQLAlchemy Entity by querying the database using what was given to us from the API's arguments, uses this entity to interact with the database, then turns the entity back into a Pydantic Model (if applicable) so the rest of the backend can use it. Aside from the small paragraph below, there isn't anything that separates about our services from the rest of the codebase that you need to know to effectively extend or improve our feature. 
+While reading through the previous section, you should have noticed that each of the API methods either returns a method call, or ends in a method call from the respective service. Aside from the `get_current_term()` method in the `backend/services/member` file, every method written in the member and applicant service corresponds to the similarly named API call. The service uses a SQLAlchemy Session to query and alter the database based on what was passed through to us in the API methods. Each service method creates a SQLAlchemy Entity by querying the database using what was given to us from the API's arguments, uses this entity to interact with the database, then turns the entity back into a Pydantic Model (if applicable) so the rest of the backend can use it. Aside from the small paragraphs below, there isn't anything that separates our services from the rest of the codebase that you need to know to effectively extend or improve our feature. 
 
 One important aspect of our feature that you may be asking yourself questions about is how we deal with the term, and more specifically, how we grab the current term. Each instance of a member is associated with a term, and every time we create a new member or update an existing member, the desired outcome is to ensure the member is associated with whatever term it is in real time. The `get_current_term()` method in `backend/services/member` uses the Python Datetime Module to grab the current term from real time. Using the return value of this method, we can ensure that members from previous terms remain unchanged.
+
+Another important aspect of our Member Service worth noting can be seen in the `get_member_by_user_and_org()` method. On line 150, we see that if the `subject.id == 1` we return a blank leader model that represents the root user. We did not implement permissions in line with the rest of the codebase due to complications that will be mentioned in the Future Considerations portion of this document. We found a simple way around these complications that will eventually need to change, but as of now, every time we are checking if a user is a member of the organization's page they are on, we return a "fake" member that has leader permissions when logged in an Rhonda. We hardcoded the id being equal to one, but this may need to change depending on what the main branch uses for the root user. Essentially, this is a quick and easy patch to a more complex problem that we wil talk about later in the document, but it is worth mentioning here to establish one of the ways we approach the root user having all permissions available.
 
 ### 3) Models
 
@@ -511,11 +545,11 @@ The reasoning for the Applicant and ApplicantDetails models is exactly the same 
 
 ### 4) Entities 
 
-While reading through this section of the document it is advised to familiarize yourself with the `backend/entities/member_entity` and `backend/entities/applicant_entity` files. While we won't go over SQLAlchemy Entities in detail here, refer to the `backend/docs/sqlalchemy` files to understand the basics of how they are used throughout the codebase. 
+While reading through this section of the document it is advised to familiarize yourself with the `backend/entities/member_entity` and `backend/entities/applicant_entity` files. While we won't go over SQLAlchemy Entities in detail here, refer to the `backend/docs/sqlalchemy` files to understand the basics of how they are used throughout the codebase. You should also familiarize yourself with the `backend/entities/organization_entity` and `backend/entities/user_entity` files. The User and Organization Entity were vital in integrating our feature into this codebase and you will not be able to further develop our feature without a strong understanding of how these entities work and how they will ultimately be related. 
 
 #### Member Entity
 
-After reading the documentation on SQLAlchemy Entities, you will notice that we set the Member Entity up to act as an association table between Users and Organizations. This is because Users and Organizations have a many-to-many relationship where a user can be a part of many organizations while an organization has many members (users) associated with it. 
+After reading the documentation on SQLAlchemy Entities and reviewing the related files, you will notice that we set the Member Entity up to act as an association table between Users and Organizations. This is because Users and Organizations have a many-to-many relationship where a user can be a part of many organizations while an organization has many members (users) associated with it. 
 
 ```py3
 user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
@@ -527,7 +561,7 @@ organization: Mapped["OrganizationEntity"] = relationship(back_populates="member
 
 The code above is what defines our many-to-many relationship. 
 
-Instead of the Member Entity being a simple association table, we also wanted members to have specific attributes that aren't found anywhere else in the codebase. This is why you'll see us declare other fields such as "year", "description", "major", etc. 
+Instead of the Member Entity being a simple association table, we also wanted members to have specific attributes that aren't found anywhere else in the codebase. This is why you'll see us declare other fields such as "year", "description", "major", etc. These represent the metadata we want members to have alongside the relationship between two entities they establish.
 
 ```py3
 def to_model(self) -> Member:
