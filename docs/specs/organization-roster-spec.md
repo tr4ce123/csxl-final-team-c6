@@ -631,20 +631,14 @@ Seen in the code snippet above, we chose to not write a separate to details mode
 ## Future Considerations
 
 ### Integrate organization permissions in with the existing permission system
- 
-  - Develop a hierarchical permission structure that recognizes different levels of access within an organization. For example, create roles like Admin, Manager, and Member, each with specific access rights.
+
   - Implement group-based permissions that allow for bulk setting of access rights according to the role within the organization.
-  - Ensure that the system supports dynamic permissions so that rights can be modified as roles within an organization change.
 
 ### Add ability to post member-only information
   
-  - Create a secure, members-only section on the platform where sensitive or exclusive content can be shared.
-  - Implement authentication and authorization checks to ensure that only logged-in members with the appropriate permissions can view this content.
-  - Offer customization features for organizations to control the layout and the type of information shared in this section.
+  - Create a secure, members-only section on the website where members only content can be shared.
+  - Implement authentication and authorization checks to ensure that only logged-in members with the appropriate permissions can view member only content.
 
 ### Add ability for organizations to post a link for external applications if they want
  
-  - Allow organizations to integrate external application processes by providing a feature to add customizable application links in their profile or designated sections.
-  - Provide tools for organizations to track how many users are clicking and using these links, which can be valuable for understanding engagement and effectiveness.
-  - Ensure these links are securely managed to prevent misuse and that they comply with privacy standards to protect both the organization and the users.
-
+  - Allow organizations to integrate external application processes by providing a feature to add customizable application links on their detials page.
