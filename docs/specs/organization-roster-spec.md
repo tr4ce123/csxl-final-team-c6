@@ -17,7 +17,14 @@ This document contains the technical specifications, this feature adds new API r
 - [Technical and User Experience Design Choice](#technical-and-user-experience-design-choice)
 - [Future Developers](#future-developers)
   - [Frontend Concerns](#frontend-concerns)
+    - [Components](#components)
+    - [Services](#services) 
   - [Backend Concerns](#backend-concerns)
+    - [1. API Layer](#1-api-layer)
+    - [2. Services](#2-member-and-applicant-service)
+    - [3. Models](#3-models)
+    - [4. Entities](#4-entities)
+- [Future Considerations](#future-considerations) 
 
 
 # Descriptions and Sample Data Representation of feature
