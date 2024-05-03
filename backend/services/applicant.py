@@ -23,12 +23,23 @@ class ApplicantService:
     """Service that performs all of the actions on the 'Applicant' table"""
 
     def __init__(self, session: Session = Depends(db_session)):
+        """Initializes the `ApplicantService` session"""
         self._session = session
 
     def get_applicants_of_organization(
         self, organization: OrganizationDetails
     ) -> list[ApplicantDetails]:
-        """Gets all pending applicants of an organization."""
+        """
+        Retrieves all of the applicants of an organization
+
+        Parameters: organization (OrganizationDetails): Organization to retrieve members of
+
+        Returns:
+            list[ApplicationDetails]: List of all `Applicants`
+
+        Raises:
+            ResourceNotFoundException if no organization is found with the corresponding slug
+        """
 
         # Ensure organization exists
         org = (
@@ -54,7 +65,18 @@ class ApplicantService:
         return [entity.to_model() for entity in applicant_entities]
 
     def get_applicant_by_id(self, id: int) -> ApplicantDetails:
-        """Gets application by its unique id."""
+        """
+        Retrieves an applicant based on its id
+
+        Parameters:
+            id: the id of the applicant
+
+        Returns:
+            Application: Object with corresponding id
+
+        Raises:
+            ResourceNotFoundException if no applicant is found with the corresponding id
+        """
         applicant = (
             self._session.query(ApplicantEntity)
             .where(ApplicantEntity.id == id)
@@ -62,7 +84,7 @@ class ApplicantService:
         )
 
         if not applicant:
-            raise ResourceNotFoundException("No applicant with this ID found.")
+            raise ResourceNotFoundException(f"No applicant with matching ID: {id}")
 
         return applicant.to_model()
 
@@ -90,7 +112,23 @@ class ApplicantService:
     def add_applicant_of_organization(
         self, subject: User, organization: OrganizationDetails, application: Applicant
     ) -> ApplicantDetails:
-        """Adds application to the given organization to the database."""
+        """
+        Adds application to the given organization to the database
+        If the applicant's ID is unique to the table, a new entry is added.
+        If the applicant's ID already exists in the table, it raises an error.
+
+        Parameters:
+            subject: a valid User model representing the currently logged in User
+            organization (OrganizationDetails): Organization to retrieve members of
+            application (Applicant): Applicant to add to table
+
+        Returns:
+            ApplicantDetails: Add application object
+
+        Raises:
+            HTTPException: If the user has already applied to the organization
+        """
+
         applicant_entities = (
             self._session.query(ApplicantEntity)
             .where(ApplicantEntity.organization_id == organization.id)
@@ -125,8 +163,17 @@ class ApplicantService:
         self, id: int, application: Applicant
     ) -> ApplicantDetails:
         """
-        Updates application in the database
-        Only takes in Applicant because can't change the user_id or org_id
+        Updates an existing application in the database
+
+        Parameters:
+            id: an int representing the id of the application to be updated
+            application (Applicant): Applicant to add to table
+
+        Returns:
+            ApplicantDetails: Updated application object
+
+        Raises:
+            ResourceNotFoundException: If no applicant is found with the corresponding id
         """
         app = (
             self._session.query(ApplicantEntity)
@@ -150,7 +197,16 @@ class ApplicantService:
         return app.to_model()
 
     def remove_applicant_of_organization(self, subject: User, id: int):
-        """Removes application."""
+        """
+        Removes an application from the organization
+
+        Parameters:
+            subject: a valid User model representing the currently logged in User
+            id: an int representing the id of the application to be removed
+
+        Raises:
+            ResourceNotFoundException: If no applicant is found with the corresponding id
+        """
         app = (
             self._session.query(ApplicantEntity)
             .where(ApplicantEntity.id == id)

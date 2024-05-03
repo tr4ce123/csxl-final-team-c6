@@ -258,9 +258,6 @@ class MemberService:
             organization: the organization the user is becoming a member of
             term: string in format "Spring YYYY" or "Fall YYYY"
 
-
-        Returns:
-            None
         """
 
         member_entity = (
