@@ -210,18 +210,22 @@ The Organization Member Roster feature contains 4 components and 2 services. Use
 ### Components
 
 #### Organization Roster Component:
+<img width="1233" alt="Screenshot 2024-05-02 at 10 32 50 PM" src="https://github.com/comp423-24s/csxl-final-team-c6/assets/111467809/91a60122-950d-400b-9357-a0164bf11668">
 
 This component holds a table that displays all of the members of an organization where the default view shows their name and their position. A clickable dropdown shows more information about each member (their major, minor, year, and bio). A registered user is able to see all members of every club and their public information. Leaders of an organization will have a different view that will show an 'Edit Member' button. Clicking this button will navigate the leader to the Edit Member Component. This component has access to the member service that holds business logic to make HTTP Requests to the backend. We decided to have users access this component through a button on the already-existing Organization Details Component. Clicking 'View Full Roster' will navigate the user to the Organization Roster Component. 
 
 #### Organization Application Component:
+<img width="1169" alt="Screenshot 2024-05-02 at 10 34 08 PM" src="https://github.com/comp423-24s/csxl-final-team-c6/assets/111467809/4ecc7495-8161-424f-9717-5b2734a0291e">
 
 This component holds a form that any user can fill out and submit. This component has access to the applicant service holding the business logic to make HTTP Requests. If an organization is of the 'App' status as seen in the Organization Type Enumeration, users will be able to click an 'Apply' button on the Organization Details Info Card Widget on the Organization Details Component. Routing to the application page and submitting the application will allow for leaders to review said application and accept or reject it in the Organization Applicants Component. 
 
 #### Organization Applicants Component: 
+<img width="1219" alt="Screenshot 2024-05-02 at 10 40 06 PM" src="https://github.com/comp423-24s/csxl-final-team-c6/assets/111467809/2cec22c3-ffd4-4342-b9e4-daca54a5cd4d">
 
 This component holds a table that displays all pending applicants of an organization. This component has access to the applicant service and the member service that holds business logic to make HTTP Requests. Only the leaders of an organization will have a 'View Pending Applicants' button displayed on the Oragnization Details Info Card Widget on the Organization Details Component. Navigating to the applicants page, a leader will see all of the users who have applied to the organization and will be able to accept or reject applicants via a drop down button. 
 
 #### Edit Member Component
+<img width="1219" alt="Screenshot 2024-05-02 at 10 40 51 PM" src="https://github.com/comp423-24s/csxl-final-team-c6/assets/111467809/6aa2027d-314b-45e3-95e9-b82b787418f2">
 
 This component contains a form field and various action buttons to change the state of a member. This component has access to the member service that holds the business logic to update a member in the backend through an HTTP Request. Only the leaders of an organization will be able to view an edit button on the organization roster to access this component. When a leader navigates to this page, it will display the member's current information (position and leadership permissions), a form field to change the member's position, a button to toggle leadership permissions, and a button to remove the member from the organization.
 
