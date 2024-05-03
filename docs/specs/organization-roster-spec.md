@@ -129,7 +129,8 @@ Pydantic model to represent an Applicant. This model is based on the `ApplicantE
 ## API Routes
 The Organization Roster feature adds 13 new API routes to handle CRUD operations.
 Member and Applicant APIs.
-![image](https://github.com/comp423-24s/csxl-final-team-c6/assets/111467809/0ea559ad-9cd5-4170-808e-58bf76e1511f)
+<img width="1314" alt="Screenshot 2024-05-02 at 11 42 21 PM" src="https://github.com/comp423-24s/csxl-final-team-c6/assets/111467809/6230140c-011d-4f67-b523-7901a574eef3">
+
 | Table Name        | Resource              | Description                                                |
 | ----------------- | ------------------- | ---------------------------------------------------------- |
 | `members.get`          | `"/{slug}"`      | Get the members of a specific organization.   |
