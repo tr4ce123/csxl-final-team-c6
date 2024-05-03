@@ -135,6 +135,36 @@ class ApplicantDetails(Applicant):
 ```
 Pydantic model to represent an Applicant. This model is based on the `ApplicantEntity` model, which defines the shape of the `Applicant` database in the PostgreSQL database.
 
+## 5. Event (Draft Event)
+Before:
+```py3
+class DraftEvent(BaseModel):
+    name: str
+    time: datetime
+    location: str
+    description: str
+    public: bool
+    registration_limit: int
+    organization_id: int
+    organizers: list[PublicUser] = []
+```
+
+After:
+```py3
+class DraftEvent(BaseModel):
+    name: str
+    time: datetime
+    location: str
+    description: str
+    public: bool
+    registration_limit: int
+    members_only: bool = False
+    organization_id: int
+    organizers: list[PublicUser] = []
+```
+Created a boolean field to represent if the event is members-only or not.
+
+
 ## API Routes
 The Organization Roster feature adds 13 new API routes to handle CRUD operations.
 Member and Applicant APIs.
