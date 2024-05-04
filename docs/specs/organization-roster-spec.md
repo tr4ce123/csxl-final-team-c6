@@ -552,6 +552,8 @@ One important aspect of our feature that you may be asking yourself questions ab
 
 Another important aspect of our Member Service worth noting can be seen in the `get_member_by_user_and_org()` method. On line 150, we see that if the `subject.id == 1` we return a blank leader model that represents the root user. We did not implement permissions in line with the rest of the codebase due to complications that will be mentioned in the Future Considerations portion of this document. We found a simple way around these complications that will eventually need to change, but as of now, every time we are checking if a user is a member of the organization's page they are on, we return a "fake" member that has leader permissions when logged in an Rhonda. We hardcoded the id being equal to one, but this may need to change depending on what the main branch uses for the root user. Essentially, this is a quick and easy patch to a more complex problem that we wil talk about later in the document, but it is worth mentioning here to establish one of the ways we approach the root user having all permissions available.
 
+If you would like to utilize the member-only events features, please familiarize yourself with the events service and model.
+
 ### 3) Models
 
 We added four new models to implement our feature which are the Member, MemberDetails, Applicant, and ApplicantDetails models. While we briefly discuss these models below it is important to review the Organization and User models, as they are frequently used throughout our feature's code, and the rest of the codebase.
