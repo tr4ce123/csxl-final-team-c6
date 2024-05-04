@@ -733,7 +733,7 @@ Seen in the code snippet above, we chose to not write a separate to details mode
 
 ### Integrate organization permissions in with the existing permission system
 
-####Properly integrate permissions and user authentication to be in line with the rest of the codebase
+#### Properly integrate permissions and user authentication to be in line with the rest of the codebase
 
 As our feature exists now, we do not use the permissions that the rest of the codebase utilizes to ensure only properly authenticated users can do certain actions. Future developers need to consider this fact and eventually integrate it into the existing permissions framework. This may require adding a new role called "leaders", but we came into the issue of how to differentiatie the leader role based on organization. Another potential option is creating a new "role" for each individual organization, but we were unsure if this would work. The same thing goes for members because they need to do things that a standard "user" cannot.
 
