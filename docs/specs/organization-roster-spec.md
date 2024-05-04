@@ -185,6 +185,7 @@ Member and Applicant APIs.
 | `applicants.get`       | `"/id/{id}"`   | Get an applicant by its ID.                            |
 | `applicants.put`       | `"/{id}"`   | Updates an applicant.                            |
 | `applicant.delete`       | `"/{id}"`   | Remove an applicant from an organization.                            |
+| `events.get`          | `"/organization/members/{slug}"`  | Get all member-only events of a specific organization.  |
 
 # Underlying database/entity-level representation decisions
 
@@ -271,7 +272,7 @@ This component contains a form field and various action buttons to change the st
 
 ### Services
 
-The two services we introduced are the Member Service and the Applicant Service which can be found in the Organization Folder
+The two services we introduced are the Member Service and the Applicant Service which can be found in the Organization Folder. We also added a method to the existing Event Service.
 
 #### Member Service
 
@@ -303,7 +304,15 @@ The Applicant Service introduces 6 new methods:
 5. updateApplicant: Updates the status of the applicant (Accepted, Rejected, or Pending).
 6. removeApplicant: Deletes the applicant. 
 
-These methods are used to create, retrieve, update, and delete applicants from the backend. This service's purpose is to interact with applicants in the backend. 
+These methods are used to create, retrieve, update, and delete applicants from the back-end. This service's purpose is to interact with applicants in the back-end. 
+
+#### Event Service
+
+We added 1 method to the event service:
+
+1. getMembersOnlyEventsByOrganization: Retrieves all member-only events of a specific organization.
+
+This method is used to retrieve member-only events from the back-end.
 
 ## Backend Concerns
 
@@ -518,6 +527,22 @@ The `new_applicant()` method takes in an organization's slug, a user model, and 
 The `update_applicant()` method takes in an id and an applicant model as arguments. 
 
 The `delete_applicant()` method takes in an applicant's id and a user model as arguments. These are used to pass user and applicant models to the member service.
+
+### Events API: In the `backend/api/events` file we added one route to the existing api:
+
+```py3
+@api.get("/organization/members/{slug}", response_model=list[EventDetails], tags=["Events"])
+def get_members_only_events_by_org(
+    slug: str,
+    subject: User = Depends(registered_user),
+    event_service: EventService = Depends(),
+    organization_service: OrganizationService = Depends()
+) -> list[EventDetails]:
+    organization = organization_service.get_by_slug(slug)
+    return event_service.get_members_only_events_by_org(organization, subject)
+```
+
+The `get_members_only_events_by_org()` method takes in a slug and a user model as arguments. These are used to pass user and organization models to the event service.
 
 ### 2) Member and Applicant Service
 
